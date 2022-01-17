@@ -3,7 +3,6 @@
 
 Wall::Wall(glm::vec2 _position, float _width, float _height, Shader* _shader, Color _color)
 {
-	m_rigidbody = new PhysicsComponent(_position, _width, _height);
 	m_shader = _shader;
 	glGenBuffers(1, &VBO);
 	glGenVertexArrays(1, &VAO);
@@ -19,7 +18,7 @@ Wall::Wall(glm::vec2 _position, float _width, float _height, Shader* _shader, Co
 	m_model = glm::translate(m_model, glm::vec3(_position.x, _position.y, 0));
 	m_shader_base_color = _color;
 	m_position = _position;
-	m_rigidbody = new PhysicsComponent(m_position, 0.01f, 0.01f);
+	m_rigidbody = new PhysicsComponent(m_position, _width, _height);
 }
 
 PhysicsComponent* Wall::GetPhysicsComponent()

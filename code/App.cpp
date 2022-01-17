@@ -139,19 +139,12 @@ refresh:
 			glm::vec2(x_pos, y_pos)));
 			
 	}
-	for (float j = 0.5; j < .98f; j+=0.1f)
+	for (unsigned int j = 0; j < 100; j++)
 	{
 		auto wall = new Wall(glm::vec2(rand() % 200 / 200.f, 
-			rand() % 200 / 200.f), 0.001, 0.001, new Shader("code\\shaders\\instance.vert", "code\\shaders\\instance.frag", "WALL"));
-		m_static_world.push_back(wall);
-		wall = new Wall(glm::vec2(-rand() % 200 / 200.f,
-			rand() % 200 / 200.f), 0.001, 0.001, new Shader("code\\shaders\\instance.vert", "code\\shaders\\instance.frag", "WALL"));
-		m_static_world.push_back(wall);
-		wall = new Wall(glm::vec2(rand() % 200 / 200.f,
-			-rand() % 200 / 200.f), 0.001, 0.001, new Shader("code\\shaders\\instance.vert", "code\\shaders\\instance.frag", "WALL"));
-		m_static_world.push_back(wall);
-		wall = new Wall(glm::vec2(-rand() % 200 / 200.f,
-			-rand() % 200 / 200.f), 0.001, 0.001, new Shader("code\\shaders\\instance.vert", "code\\shaders\\instance.frag", "WALL"));
+			rand() % 200 / 200.f), 
+			0.01, 0.01,
+			new Shader("code\\shaders\\instance.vert", "code\\shaders\\instance.frag", "WALL"));
 		m_static_world.push_back(wall);
 	}
 	m_exit_door = new Door(new Shader("code\\shaders\\instance.vert", "code\\shaders\\instance.frag", "DOOR"), 

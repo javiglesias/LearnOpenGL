@@ -1,6 +1,6 @@
 #include "Door.h"
 
-Door::Door(Shader* _shader, glm::vec2 _init_position)
+Door::Door(Shader* _shader, glm::vec2 _init_position, float _width, float _heigth)
 {
 	m_shader = _shader;
 	glGenBuffers(1, &VBO);
@@ -14,10 +14,10 @@ Door::Door(Shader* _shader, glm::vec2 _init_position)
 	m_model_id = glGetUniformLocation(m_shader->id, "model");
 	m_base_color_id = glGetUniformLocation(m_shader->id, "base_color");
 	//	Posicion de inicio donde va a empezar el enemigo
-	m_model = glm::translate(m_model, glm::vec3(_init_position.x, _init_position.y, 0.0f));
+	//m_model = glm::translate(m_model, glm::vec3(_init_position.x, _init_position.y, 0.0f));
 	m_position = _init_position;
 	m_model = glm::translate(m_model, glm::vec3(m_position.x, m_position.y, 0.0f));
-	m_rigidbody = new PhysicsComponent(m_position, 0.01f, 0.01f);
+	m_rigidbody = new PhysicsComponent(m_position, _width, _heigth);
 }
 
 void Door::Draw()

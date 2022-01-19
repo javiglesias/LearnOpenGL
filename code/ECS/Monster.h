@@ -25,7 +25,7 @@ public:
 		//0.0f, 0.1f, 0.0f,
 		0.1f, 0.1f, 0.0f
 	};
-	void Draw() override;
+	void Draw(glm::vec2 _scrolling) override;
 	void DrawEffectArea() override;
 	void Move(glm::vec2 _movement) override;
 	void UpdateIA(Entity* _hero) override;

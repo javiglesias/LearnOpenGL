@@ -5,7 +5,7 @@ class Door : public Entity
 public:
 	Door(){}
 	Door(Shader* _shader, glm::vec2 _init_position, float _width=0.05f, float _heigth = 0.05f);
-	void Draw() override;
+	void Draw(glm::vec2 _scroling) override;
 	glm::vec2 GetPosition() override;
 	PhysicsComponent* GetPhysicsComponent() override {return m_rigidbody;};
 private:

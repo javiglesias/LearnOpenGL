@@ -2,7 +2,6 @@
 
 void PhysicsComponent::UpdatePhysics()
 {
-	m_position = glm::vec2(0.f);
 	return;
 }
 

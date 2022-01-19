@@ -22,7 +22,7 @@ Hero::Hero(Shader* _shader, glm::vec2 _init_position)
 	m_rigidbody = new PhysicsComponent(m_position, 0.02f, 0.05f);
 }
 
-void Hero::Draw()
+void Hero::Draw(glm::vec2 _scrolling)
 {
 	glBindVertexArray(VAO);
 	glUniform4f(base_color_id, 1,0,0,1);

@@ -26,8 +26,9 @@ PhysicsComponent* Wall::GetPhysicsComponent()
 	return m_rigidbody;
 }
 
-void Wall::Draw()
+void Wall::Draw(glm::vec2 _scrolling)
 {
+	m_movement = -_scrolling;
 	glBindVertexArray(VAO);
 	SetShaderColor(m_shader_base_color);
 	m_model = glm::translate(m_model, glm::vec3(m_movement.x, m_movement.y, 0));

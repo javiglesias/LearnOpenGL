@@ -20,7 +20,7 @@ Door::Door(Shader* _shader, glm::vec2 _init_position, float _width, float _heigt
 	m_rigidbody = new PhysicsComponent(m_position, _width, _heigth);
 }
 
-void Door::Draw()
+void Door::Draw(glm::vec2 _scroling)
 {
 	glBindVertexArray(VAO);
 	glUniform4f(m_base_color_id, 0.4f, 0.5f, 1.f, 1.f);

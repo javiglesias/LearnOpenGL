@@ -46,7 +46,7 @@ public:
 	};
 	Entity();
 	void virtual Move(){};
-	void virtual Draw(){};
+	void virtual Draw(glm::vec2 _scrolling){};
 	void virtual DrawEffectArea(){}
 	void virtual LoadTexture(){};
 	void virtual Move(glm::vec2 _movement);

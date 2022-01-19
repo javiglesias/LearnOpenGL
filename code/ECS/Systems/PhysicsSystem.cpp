@@ -40,8 +40,10 @@ bool PhysicsSystem::GonnaCollide(Entity* _one, Entity* _two)
 {
 	auto _one_rigidbody = _one->GetPhysicsComponent();
 	auto _two_rigidbody = _two->GetPhysicsComponent();
-	if(_one_rigidbody->m_position.x < _two_rigidbody->m_position.x + _two_rigidbody->m_width &&
-		_one_rigidbody->m_position.y < _two_rigidbody->m_position.y + _two_rigidbody->m_height)
+	if(_one_rigidbody->m_position.x < (_two_rigidbody->m_position.x + _two_rigidbody->m_width) &&
+		_one_rigidbody->m_position.x > _two_rigidbody->m_position.x &&
+		_one_rigidbody->m_position.y < (_two_rigidbody->m_position.y + _two_rigidbody->m_height) &&
+		_one_rigidbody->m_position.y > _two_rigidbody->m_position.y)
 		return true;
 	else
 		return false;	

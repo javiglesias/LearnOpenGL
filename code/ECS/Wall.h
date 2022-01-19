@@ -28,6 +28,6 @@ private:
 	glm::vec2 m_position{0.f};
 	glm::vec2 m_movement{0.f};
 	PhysicsComponent* m_rigidbody;
-	void Draw() override;
-};
+	void Draw(glm::vec2 _scrolling) override;
+};	
 

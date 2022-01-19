@@ -7,7 +7,7 @@ class Hero :
 public:
     Hero(){}
     Hero(Shader* _shader, glm::vec2 _position = glm::vec2(0,0));
-	void Draw() override;
+	void Draw(glm::vec2 _scrolling) override;
 	float shape[15] = {
 		//	x,y,z
 		0.0f, 0.0f, 0.0f,

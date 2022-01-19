@@ -50,6 +50,7 @@ private:
 	void refresh_level();
 	std::string m_hero_name;
 	bool m_is_restarting = false;
+	glm::vec2 m_scrolling{0.f};
 public:
 	App(std::string _hero_name) { m_hero_name = _hero_name;}
 	~App();

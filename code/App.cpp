@@ -10,7 +10,6 @@ void framebuffer_size_callback(GLFWwindow* _window, int _width, int _height)
 }
 void App::process_input(GLFWwindow* m_window)
 {
-	// CAMERA MOVEMENT
 	if (glfwGetKey(m_window, GLFW_KEY_W) == GLFW_PRESS)
 	{
 		float sprint = 1.f;
@@ -22,6 +21,7 @@ void App::process_input(GLFWwindow* m_window)
 		if(!m_physics_system->GonnaCollideWith(m_hero_char))
 		{
 			//m_sound_system->PlaySFX("foot_step.wav");
+			m_scrolling = (sprint * MOVE_UP);
 			m_hero_char->Move(sprint * MOVE_UP);
 		}
 	} else if (glfwGetKey(m_window, GLFW_KEY_A) == GLFW_PRESS)
@@ -33,7 +33,10 @@ void App::process_input(GLFWwindow* m_window)
 		}
 		m_hero_char->SetNextPosition(sprint * MOVE_LEFT);
 		if (!m_physics_system->GonnaCollideWith(m_hero_char))
+		{
+			m_scrolling = (sprint * MOVE_LEFT);
 			m_hero_char->Move(sprint * MOVE_LEFT);
+		}
 	} else if (glfwGetKey(m_window, GLFW_KEY_S) == GLFW_PRESS)
 	{
 		float sprint = 1.f;
@@ -43,7 +46,10 @@ void App::process_input(GLFWwindow* m_window)
 		}
 		m_hero_char->SetNextPosition(sprint * MOVE_DOWN);
 		if (!m_physics_system->GonnaCollideWith(m_hero_char))
+		{
+			m_scrolling = (sprint * MOVE_DOWN);
 			m_hero_char->Move(sprint * MOVE_DOWN);
+		}
 	} else if (glfwGetKey(m_window, GLFW_KEY_D) == GLFW_PRESS)
 	{
 		float sprint = 1.f;
@@ -53,7 +59,10 @@ void App::process_input(GLFWwindow* m_window)
 		}
 		m_hero_char->SetNextPosition(sprint * MOVE_RIGHT);
 		if (!m_physics_system->GonnaCollideWith(m_hero_char))
+		{
+			m_scrolling = (sprint * MOVE_RIGHT);
 			m_hero_char->Move(sprint * MOVE_RIGHT);
+		}
 	}
 	if (glfwGetKey(m_window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 	{
@@ -63,6 +72,7 @@ void App::process_input(GLFWwindow* m_window)
 	if (glfwGetKey(m_window, GLFW_KEY_R) == GLFW_PRESS && !m_is_restarting)
 	{
 		refresh_level();
+		m_is_restarting = true;
 	}
 	else if (glfwGetKey(m_window, GLFW_KEY_R) == GLFW_RELEASE && m_is_restarting)
 	{
@@ -81,11 +91,10 @@ void App::refresh_level()
 	fprintf(stdout, "\nRecuerda beber cerveza.");
 	m_refresh = true;
 	m_enemies.clear();
-	free(m_exit_door);
+	//free(m_exit_door);
 	m_static_world.clear();
 	m_sound_system->StopAll();
 	m_sound_system->PlaySFX("open_door.wav");
-	m_is_restarting = true;
 }
 App::~App()
 {
@@ -126,6 +135,9 @@ int App::run()
 	m_sound_system = new SoundSystem();
 	m_brain = new AISystem();
 	m_physics_system = new PhysicsSystem();
+	//	TODO Aqui cuando se reinicia el nivel, se estan pintando 2 puestas de salida.
+	m_exit_door = new Door(new Shader("code\\shaders\\instance.vert", "code\\shaders\\instance.frag", "DOOR"), 
+		glm::vec2(-0.5f,-0.49f));
 refresh:
 	m_sound_system->PlayMusic("flies.wav");
 	m_hero_char = new Hero(new Shader("code\\shaders\\basic.vert", "code\\shaders\\basic.frag", "HERO"), glm::vec2(0,0));
@@ -147,10 +159,6 @@ refresh:
 			new Shader("code\\shaders\\instance.vert", "code\\shaders\\instance.frag", "WALL"));
 		m_static_world.push_back(wall);
 	}
-	m_exit_door = new Door(new Shader("code\\shaders\\instance.vert", "code\\shaders\\instance.frag", "DOOR"), 
-		glm::vec2(-rand() % 200 / 400.f,
-			-rand() % 200 / 400.f));
-	m_static_world.push_back(m_exit_door);
 	while (!glfwWindowShouldClose(m_window)) // Game loop
 	{
 		if (m_refresh)
@@ -171,19 +179,21 @@ refresh:
 			m_accumulated_time = 0.f;
 			for (auto ent : m_enemies)
 			{
-				ent->Draw();
+				ent->Draw(m_scrolling);
 			}
 			for (auto ent : m_static_world)
 			{
 				if(ent->m_show || ! ent->m_to_delete)
-					ent->Draw();
+					ent->Draw(m_scrolling);
 			}
-			m_hero_char->Draw();
+			m_hero_char->Draw(m_scrolling);
+			//m_exit_door->Draw(m_scrolling);
 
 			glfwSwapBuffers(m_window);
 			glfwPollEvents();
 			m_physics_system->FreeOutOfBounds(&m_static_world);
 			m_frame_number++;
+			m_scrolling = glm::vec2(0.f);
 		}
 		if (m_accumulated_time_physics >= m_frame_cap_physics) // Physics frame
 		{

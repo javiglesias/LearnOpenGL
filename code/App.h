@@ -10,6 +10,7 @@
 #include "ECS/Entity.h"
 #include "ECS/Hero.h"
 #include "ECS/Monster.h"
+#include "ECS/NPC.h"
 #include "ECS/Wall.h"
 #include "ECS/Door.h"
 #include "ECS/Systems/SoundSystem.h"
@@ -43,6 +44,7 @@ private:
 	std::vector<Entity*> m_dynamic_world{};	//	Objetos que se mueven
 	Hero* m_hero_char;						//	Heroe
 	Door* m_exit_door;
+	NPC* m_npc;
 	SoundSystem* m_sound_system;			//	Sonido
 	NetworkSystem* m_network_system;		//	Red
 	PhysicsSystem* m_physics_system;		//	Fisicas/colisiones

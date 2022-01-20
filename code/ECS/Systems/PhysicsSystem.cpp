@@ -17,7 +17,7 @@ void PhysicsSystem::AddDynamicWorld(Entity* _entity)
 
 bool PhysicsSystem::GonnaCollideWith(Entity* _entity)
 {
-	for (auto static_entity : m_static_world)
+	/*for (auto static_entity : m_static_world)
 	{
 		if (_entity->GetNextPosition() == static_entity->GetPosition())
 		{
@@ -26,6 +26,16 @@ bool PhysicsSystem::GonnaCollideWith(Entity* _entity)
 		else if (static_entity->GetPhysicsComponent()->IsCollidingWith(_entity->GetNextPosition()))
 		{
 			return true;
+		}
+	}*/
+	for (auto ent : m_static_world)
+	{
+		if (ent->m_show)
+		{
+			if (GonnaCollide(_entity, ent))
+			{
+				return true;
+			}
 		}
 	}
 	return false;

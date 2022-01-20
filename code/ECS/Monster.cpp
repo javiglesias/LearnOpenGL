@@ -28,7 +28,7 @@ Monster::Monster(Shader* _shader, glm::vec2 _init_position)
 void Monster::Draw(glm::vec2 _scrolling)
 {
 	glBindVertexArray(VAO);
-	glUniform4f(base_color_id, 0, 1, 1, 1);
+	glUniform4f(base_color_id, 1, 0, 0, 1);
 	m_translate -= _scrolling;
 	m_model = glm::translate(m_model, glm::vec3(m_translate.x, m_translate.y, 0.0f));
 	glUniformMatrix4fv(model_id, 1, GL_FALSE, glm::value_ptr(m_model));

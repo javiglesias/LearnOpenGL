@@ -3,7 +3,7 @@
 Hero::Hero(Shader* _shader, glm::vec2 _init_position)
 {
 	shader = _shader;
-	m_rigidbody = new PhysicsComponent(m_position, m_width, m_height);
+	m_position = _init_position;
 	m_ears = new SoundComponent();
 	m_ears->PlaySFX(m_ears->WALK);
 	glGenBuffers(1, &VBO);
@@ -16,7 +16,6 @@ Hero::Hero(Shader* _shader, glm::vec2 _init_position)
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float),
 		(void*)0);
 	glEnableVertexAttribArray(0);
-	m_position = _init_position;
 	m_center.x = m_position.x;
 	m_center.y = m_position.y - 0.025f;
 	m_rigidbody = new PhysicsComponent(m_position, 0.02f, 0.05f);
@@ -25,7 +24,7 @@ Hero::Hero(Shader* _shader, glm::vec2 _init_position)
 void Hero::Draw(glm::vec2 _scrolling)
 {
 	glBindVertexArray(VAO);
-	glUniform4f(base_color_id, 1,0,0,1);
+	glUniform4f(base_color_id, 0,0,1,1);
 	m_model = glm::translate(m_model, glm::vec3(m_translate.x, m_translate.y, 0.0f));
 	glUniformMatrix4fv(model_id, 1, GL_FALSE, glm::value_ptr(m_model));
 	m_translate = glm::vec2(0.0f);

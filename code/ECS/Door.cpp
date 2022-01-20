@@ -22,8 +22,12 @@ Door::Door(Shader* _shader, glm::vec2 _init_position, float _width, float _heigt
 
 void Door::Draw(glm::vec2 _scroling)
 {
+	auto movement = -_scroling;
+	m_position += movement;
+	m_rigidbody->UpdatePosition(m_position);
 	glBindVertexArray(VAO);
 	glUniform4f(m_base_color_id, 0.4f, 0.5f, 1.f, 1.f);
+	m_model = glm::translate(m_model, glm::vec3(movement.x, movement.y, 0));
 	glUniformMatrix4fv(m_model_id, 1, GL_FALSE, glm::value_ptr(m_model));
 	m_shader->use();
 	glDrawArrays(GL_LINE_LOOP, 0, 4);

@@ -138,10 +138,13 @@ int App::run()
 	//	TODO Aqui cuando se reinicia el nivel, se estan pintando 2 puestas de salida.
 	m_exit_door = new Door(new Shader("code\\shaders\\instance.vert", "code\\shaders\\instance.frag", "DOOR"), 
 		glm::vec2(-0.5f,-0.49f));
+	m_npc = new NPC(new Shader("code\\shaders\\instance.vert", "code\\shaders\\instance.frag", "NPC"),
+		glm::vec2(0.5f, 0.49f));
 refresh:
 	m_sound_system->PlayMusic("flies.wav");
 	m_hero_char = new Hero(new Shader("code\\shaders\\basic.vert", "code\\shaders\\basic.frag", "HERO"), glm::vec2(0,0));
 	m_enemies.clear();
+	m_static_world.push_back(m_npc);
 	for (unsigned int i = 0; i < 10; i++)
 	{
 		float x_pos = ((rand() % SCREEN_WIDTH) / 1000.0) - 0.5;
@@ -183,11 +186,10 @@ refresh:
 			}
 			for (auto ent : m_static_world)
 			{
-				if(ent->m_show || ! ent->m_to_delete)
-					ent->Draw(m_scrolling);
+				ent->Draw(m_scrolling);
 			}
 			m_hero_char->Draw(m_scrolling);
-			//m_exit_door->Draw(m_scrolling);
+			m_exit_door->Draw(m_scrolling);
 
 			glfwSwapBuffers(m_window);
 			glfwPollEvents();
@@ -199,7 +201,7 @@ refresh:
 		{
 			m_accumulated_time_physics = 0.f;
 			//	COMMITEAR LAS FUTURAS POSICIONES
-			for (auto ent : m_static_world)
+			/*for (auto ent : m_static_world)
 			{
 				if (ent->m_show)
 				{
@@ -209,7 +211,7 @@ refresh:
 					}
 					ent->UpdatePhysics();
 				}
-			}
+			}*/
 			//	Comprobamos las colisiones con el mundo estatico antes de avanzar.
 			if (m_physics_system->GonnaCollide(m_hero_char, m_exit_door))
 			{

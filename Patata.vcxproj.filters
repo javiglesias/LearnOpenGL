@@ -102,6 +102,9 @@
     <ClCompile Include="code\ECS\Projectile.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="code\ECS\NPC.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="code\App.h">
@@ -194,6 +197,9 @@
     <ClInclude Include="code\ECS\Projectile.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="code\ECS\NPC.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Font Include="resources\AncientModernTales-a7Po.ttf" />
@@ -204,6 +210,7 @@
     <None Include="resources\App.cfg" />
     <None Include="code\shaders\instance.vert" />
     <None Include="code\shaders\instance.frag" />
+    <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="resources\introduction.txt" />

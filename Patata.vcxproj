@@ -180,6 +180,7 @@
     <ClCompile Include="code\ECS\Components\NetworkComponent.cpp" />
     <ClCompile Include="code\ECS\Door.cpp" />
     <ClCompile Include="code\ECS\Projectile.cpp" />
+    <ClCompile Include="code\ECS\NPC.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="code\Action\Action.h" />
@@ -212,6 +213,7 @@
     <ClInclude Include="code\ECS\Components\NetworkComponent.h" />
     <ClInclude Include="code\ECS\Door.h" />
     <ClInclude Include="code\ECS\Projectile.h" />
+    <ClInclude Include="code\ECS\NPC.h" />
   </ItemGroup>
   <ItemGroup>
     <Font Include="resources\AncientModernTales-a7Po.ttf" />
@@ -221,6 +223,7 @@
     <None Include="code\shaders\basic.vert" />
     <None Include="code\shaders\instance.frag" />
     <None Include="code\shaders\instance.vert" />
+    <None Include="README.md" />
     <None Include="resources\App.cfg" />
   </ItemGroup>
   <ItemGroup>

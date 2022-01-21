@@ -23,11 +23,14 @@ public:
 	Shape_Size GetSize() override;
 	void SetNextPosition(glm::vec2);
 	PhysicsComponent* GetPhysicsComponent() override { return m_rigidbody; };
+	void Interact(bool _interacting){m_interacting = _interacting;}
+	bool GetInteracting() {return m_interacting;}
 private:
 	unsigned int model_id = -1;
 	unsigned int base_color_id = -1;
 	unsigned int VBO;
 	unsigned int VAO = -1;
+	bool m_interacting = false;
 	glm::mat4 m_model = glm::mat4(1.0f);
 	glm::vec2 m_position{0.f};
 	glm::vec2 m_next_position{0.f};

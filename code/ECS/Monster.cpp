@@ -71,8 +71,12 @@ void Monster::UpdateIA(Entity* _hero)
 {
 	//	Aqui se hacen todas las actualizaciones de IA necesarias, movimiento, accion a tomar
 	//	Esto se esta ejecutando a 24fps
-	glm::vec2 movement = m_brain->Update(_hero->GetPosition(), m_position);
-	Move(movement);
+	auto distance = glm::distance(_hero->GetPosition(), m_position);
+	if (distance >= m_active_distance)
+	{
+		glm::vec2 movement = m_brain->Update(_hero->GetPosition(), m_position);
+		Move(movement);
+	}
 }
 
 PhysicsComponent* Monster::GetPhysicsComponent()

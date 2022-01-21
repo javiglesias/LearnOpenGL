@@ -6,7 +6,6 @@ NPC::NPC(Shader* _shader, glm::vec2 _init_position, float _width, float _height)
 	m_height = _height;
 	m_position = _init_position;
 	shader = _shader;
-	m_rigidbody = new PhysicsComponent(m_position, m_width, m_height);
 	m_ears = new SoundComponent();
 	m_ears->PlaySFX(m_ears->WALK);
 	glGenBuffers(1, &VBO);
@@ -24,7 +23,7 @@ NPC::NPC(Shader* _shader, glm::vec2 _init_position, float _width, float _height)
 
 void NPC::Draw(glm::vec2 _scrolling)
 {
-	m_translate -= _scrolling;
+	m_position = m_translate -= _scrolling;
 	glBindVertexArray(VAO);
 	glUniform4f(base_color_id, 0, 1, 0, 1);
 	m_model = glm::translate(m_model, glm::vec3(m_translate.x, 
@@ -54,6 +53,20 @@ void NPC::DrawEffectArea()
 
 void NPC::UpdatePhysics()
 {
+}
+
+void NPC::UpdatePhysics(Entity* _target, bool _interacting)
+{
+	m_position.x = m_position.x - m_width/2;
+	m_position.y = m_position.y - m_height;
+	if (_target->GetPosition().x < (m_position.x + m_width) &&
+		_target->GetPosition().x > m_position.x &&
+		_target->GetPosition().y < (m_position.y + m_height) &&
+		_target->GetPosition().y > m_position.y &&
+		_interacting)
+	{
+		fprintf(stdout, "Interact with the NPC");
+	}
 }
 
 void NPC::UpdateSounds()

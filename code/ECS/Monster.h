@@ -50,6 +50,6 @@ private:
 	AIComponent* m_brain;
 	Shader* shader;
 	SoundComponent* m_ears;
-
+	float m_active_distance = 0.1f;
 };
 

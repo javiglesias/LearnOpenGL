@@ -64,6 +64,14 @@ void App::process_input(GLFWwindow* m_window)
 			m_hero_char->Move(sprint * MOVE_RIGHT);
 		}
 	}
+	if (glfwGetKey(m_window, GLFW_KEY_E) == GLFW_PRESS)
+	{
+		m_hero_char->Interact(true);
+	}
+	if (glfwGetKey(m_window, GLFW_KEY_E) == GLFW_RELEASE)
+	{
+		m_hero_char->Interact(false);
+	}
 	if (glfwGetKey(m_window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 	{
 		glfwTerminate();
@@ -213,6 +221,8 @@ refresh:
 				}
 			}*/
 			//	Comprobamos las colisiones con el mundo estatico antes de avanzar.
+			m_npc->UpdatePhysics(m_hero_char, 
+				m_hero_char->GetInteracting());
 			if (m_physics_system->GonnaCollide(m_hero_char, m_exit_door))
 			{
 				refresh_level();

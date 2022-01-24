@@ -21,11 +21,10 @@ Hero::Hero(Shader* _shader, glm::vec2 _init_position)
 	m_rigidbody = new PhysicsComponent(m_position, 0.02f, 0.05f);
 }
 
-void Hero::Draw(glm::vec2 _scrolling)
+void Hero::Draw()
 {
 	glBindVertexArray(VAO);
 	glUniform4f(base_color_id, 0,0,1,1);
-	m_model = glm::translate(m_model, glm::vec3(m_translate.x, m_translate.y, 0.0f));
 	glUniformMatrix4fv(model_id, 1, GL_FALSE, glm::value_ptr(m_model));
 	m_translate = glm::vec2(0.0f);
 	shader->use();
@@ -44,8 +43,9 @@ void Hero::Move(glm::vec2 _movement)
 	}
 	m_position += _movement;
 	m_translate = _movement;
+	m_model = glm::translate(m_model, glm::vec3(m_translate.x, m_translate.y, 0.0f));
 	m_center.x = m_position.x;
-	m_center.y = m_position.y - 0.025f;
+	m_center.y = m_position.y - m_height/2;
 	m_rigidbody->UpdatePosition(m_center);
 }
 

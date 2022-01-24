@@ -7,7 +7,8 @@ class NPC :
 public:
 	NPC(){}
 	NPC(Shader* _shader, glm::vec2 _init_position, float _width = 0.025f, float _height = 0.025f);
-	void Draw(glm::vec2 _scrolling) override;
+	void Draw() override;
+	void Move(glm::vec2 _scrolling) override;
 	float shape[15] = {
 		//	x,y,z
 		0.0f, 0.0f, 0.0f,

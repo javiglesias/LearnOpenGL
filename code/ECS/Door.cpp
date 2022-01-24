@@ -20,19 +20,25 @@ Door::Door(Shader* _shader, glm::vec2 _init_position, float _width, float _heigt
 	m_rigidbody = new PhysicsComponent(m_position, _width, _heigth);
 }
 
-void Door::Draw(glm::vec2 _scroling)
+void Door::Draw()
 {
-	auto movement = -_scroling;
-	m_position += movement;
 	m_rigidbody->UpdatePosition(m_position);
 	glBindVertexArray(VAO);
 	glUniform4f(m_base_color_id, 0.4f, 0.5f, 1.f, 1.f);
-	m_model = glm::translate(m_model, glm::vec3(movement.x, movement.y, 0));
 	glUniformMatrix4fv(m_model_id, 1, GL_FALSE, glm::value_ptr(m_model));
 	m_shader->use();
 	glDrawArrays(GL_LINE_LOOP, 0, 4);
 	m_shader->unuse();
 }
+
+void Door::Move(glm::vec2 _scroling)
+{
+	m_translate -=_scroling;
+	m_position += m_translate;
+	m_model = glm::translate(m_model, glm::vec3(m_translate.x, m_translate.y, 0));
+	m_translate = glm::vec2(0.f);
+}
+
 
 glm::vec2 Door::GetPosition()
 {

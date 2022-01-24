@@ -5,7 +5,7 @@
 
 void framebuffer_size_callback(GLFWwindow* _window, int _width, int _height)
 {
-	glViewport(0,0, _width, _height);
+	glViewport(-1,-1, _width, _height);
 	//glOrtho(0, _width, 0, _height, 0, 1);
 }
 void App::process_input(GLFWwindow* m_window)
@@ -98,7 +98,7 @@ void App::refresh_level()
 {
 	fprintf(stdout, "\nRecuerda beber cerveza.");
 	m_refresh = true;
-	m_enemies.clear();
+	m_dynamic_world.clear();
 	//free(m_exit_door);
 	m_static_world.clear();
 	m_sound_system->StopAll();
@@ -109,7 +109,7 @@ App::~App()
 	free(m_sound_system);
 	free(m_hero_char);
 	free(m_exit_door);
-	m_enemies.clear();
+	m_dynamic_world.clear();
 	m_static_world.clear();
 }
 int App::run()
@@ -136,7 +136,7 @@ int App::run()
 		fprintf(stderr, "Error loading GLAD.");
 		return -1;
 	}
-	glViewport(0,0, SCREEN_WIDTH, SCREEN_HEIGHT);
+	glViewport(-1, -1, SCREEN_WIDTH, SCREEN_HEIGHT);
 	//	Sound System init
 	m_network_system = new NetworkSystem();
 	glfwSetFramebufferSizeCallback(m_window, framebuffer_size_callback);
@@ -151,23 +151,33 @@ int App::run()
 refresh:
 	m_sound_system->PlayMusic("flies.wav");
 	m_hero_char = new Hero(new Shader("code\\shaders\\basic.vert", "code\\shaders\\basic.frag", "HERO"), glm::vec2(0,0));
-	m_enemies.clear();
+	m_dynamic_world.clear();
 	m_static_world.push_back(m_npc);
 	for (unsigned int i = 0; i < 10; i++)
 	{
 		float x_pos = ((rand() % SCREEN_WIDTH) / 1000.0) - 0.5;
 		Sleep(3);
 		float y_pos = ((rand() % SCREEN_HEIGHT) / 1000.0) - 0.5;
-		m_enemies.push_back( new Monster(new Shader("code\\shaders\\basic.vert", "code\\shaders\\basic.frag", "MOSTRO"),
+		m_dynamic_world.push_back( new Monster(new Shader("code\\shaders\\basic.vert", "code\\shaders\\basic.frag", "MOSTRO"),
 			glm::vec2(x_pos, y_pos)));
 			
 	}
+	// TODO Generacion procedimental de la mazmorra.
 	for (unsigned int j = 0; j < 100; j++)
 	{
-		auto wall = new Wall(glm::vec2(rand() % 200 / 200.f, 
-			rand() % 200 / 200.f), 
-			0.01, 0.01,
-			new Shader("code\\shaders\\instance.vert", "code\\shaders\\instance.frag", "WALL"));
+		Wall* wall = nullptr;
+		if(m_static_world.size() > 0)
+		{
+			auto last_wall = m_static_world.at(m_static_world.size() - 1);
+			wall = new Wall(glm::vec2(0.f,0.f),
+				0.01, 0.01,
+				new Shader("code\\shaders\\instance.vert", "code\\shaders\\instance.frag", "WALL"));
+		} else
+		{
+			wall = new Wall(glm::vec2(-1.f, -1.f),
+				0.01, 0.01,
+				new Shader("code\\shaders\\instance.vert", "code\\shaders\\instance.frag", "WALL"));
+		}
 		m_static_world.push_back(wall);
 	}
 	while (!glfwWindowShouldClose(m_window)) // Game loop
@@ -188,38 +198,24 @@ refresh:
 			glClear(GL_COLOR_BUFFER_BIT);
 			process_input(m_window);
 			m_accumulated_time = 0.f;
-			for (auto ent : m_enemies)
+			for (auto ent : m_dynamic_world)
 			{
-				ent->Draw(m_scrolling);
+				ent->Draw();
 			}
 			for (auto ent : m_static_world)
 			{
-				ent->Draw(m_scrolling);
+				ent->Draw();
 			}
-			m_hero_char->Draw(m_scrolling);
-			m_exit_door->Draw(m_scrolling);
+			m_hero_char->Draw();
+			m_exit_door->Draw();
 
 			glfwSwapBuffers(m_window);
 			glfwPollEvents();
-			m_physics_system->FreeOutOfBounds(&m_static_world);
 			m_frame_number++;
-			m_scrolling = glm::vec2(0.f);
 		}
 		if (m_accumulated_time_physics >= m_frame_cap_physics) // Physics frame
 		{
 			m_accumulated_time_physics = 0.f;
-			//	COMMITEAR LAS FUTURAS POSICIONES
-			/*for (auto ent : m_static_world)
-			{
-				if (ent->m_show)
-				{
-					if (m_physics_system->GonnaCollide(m_hero_char, ent))
-					{
-						ent->m_show = false;
-					}
-					ent->UpdatePhysics();
-				}
-			}*/
 			//	Comprobamos las colisiones con el mundo estatico antes de avanzar.
 			m_npc->UpdatePhysics(m_hero_char, 
 				m_hero_char->GetInteracting());
@@ -228,10 +224,20 @@ refresh:
 				refresh_level();
 				goto refresh;
 			}
+			for(auto ent : m_static_world)
+			{
+				ent->Move(m_scrolling);
+			}
+			for(auto ent : m_dynamic_world)
+			{
+				ent->Move(m_scrolling);
+			}
+			m_exit_door->Move(m_scrolling);
+			m_scrolling = glm::vec2(0.f);
 		}
 		if (m_accumulated_time_ia >= m_frame_cap_ia) // IA and Sound frame
 		{
-			m_brain->Update(m_hero_char, m_enemies);
+			m_brain->Update(m_hero_char, m_dynamic_world);
 			for (auto ent : m_static_world)
 			{
 				if (ent->m_show || !ent->m_to_delete)

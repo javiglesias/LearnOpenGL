@@ -17,25 +17,11 @@ void PhysicsSystem::AddDynamicWorld(Entity* _entity)
 
 bool PhysicsSystem::GonnaCollideWith(Entity* _entity)
 {
-	/*for (auto static_entity : m_static_world)
-	{
-		if (_entity->GetNextPosition() == static_entity->GetPosition())
-		{
-			return true;
-		}
-		else if (static_entity->GetPhysicsComponent()->IsCollidingWith(_entity->GetNextPosition()))
-		{
-			return true;
-		}
-	}*/
 	for (auto ent : m_static_world)
 	{
-		if (ent->m_show)
+		if (GonnaCollide(_entity, ent))
 		{
-			if (GonnaCollide(_entity, ent))
-			{
-				return true;
-			}
+			return true;
 		}
 	}
 	return false;
@@ -48,8 +34,8 @@ bool PhysicsSystem::GonnaCollideWith(Entity* _entity)
 /// <returns></returns>
 bool PhysicsSystem::GonnaCollide(Entity* _one, Entity* _two)
 {
-	auto _one_rigidbody = _one->GetPhysicsComponent();
-	auto _two_rigidbody = _two->GetPhysicsComponent();
+	const auto _one_rigidbody = _one->GetPhysicsComponent();
+	const auto _two_rigidbody = _two->GetPhysicsComponent();
 	if(_one_rigidbody->m_position.x < (_two_rigidbody->m_position.x + _two_rigidbody->m_width) &&
 		_one_rigidbody->m_position.x > _two_rigidbody->m_position.x &&
 		_one_rigidbody->m_position.y < (_two_rigidbody->m_position.y + _two_rigidbody->m_height) &&

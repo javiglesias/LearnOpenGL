@@ -21,9 +21,8 @@ NPC::NPC(Shader* _shader, glm::vec2 _init_position, float _width, float _height)
 	m_rigidbody = new PhysicsComponent(m_position, 0.02f, 0.05f);
 }
 
-void NPC::Draw(glm::vec2 _scrolling)
+void NPC::Draw()
 {
-	m_position = m_translate -= _scrolling;
 	glBindVertexArray(VAO);
 	glUniform4f(base_color_id, 0, 1, 0, 1);
 	m_model = glm::translate(m_model, glm::vec3(m_translate.x, 
@@ -35,6 +34,11 @@ void NPC::Draw(glm::vec2 _scrolling)
 	shader->unuse();
 	//DrawEffectArea();
 }
+void NPC::Move(glm::vec2 _scrolling)
+{
+	m_position = m_translate -= _scrolling;
+}
+
 void NPC::DrawEffectArea()
 {
 	glBindVertexArray(VAO_Circle);

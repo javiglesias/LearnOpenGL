@@ -26,18 +26,23 @@ PhysicsComponent* Wall::GetPhysicsComponent()
 	return m_rigidbody;
 }
 
-void Wall::Draw(glm::vec2 _scrolling)
+void Wall::Draw()
 {
-	m_movement = -_scrolling;
 	glBindVertexArray(VAO);
 	SetShaderColor(m_shader_base_color);
-	m_model = glm::translate(m_model, glm::vec3(m_movement.x, m_movement.y, 0));
 	glUniformMatrix4fv(model_id, 1, GL_FALSE, glm::value_ptr(m_model));
 	m_shader->use();
 	glDrawArrays(GL_LINE_LOOP, 0, 4);
 	m_shader->unuse();
+}
+void Wall::Move(glm::vec2 _scrolling)
+{
+	m_movement = -_scrolling;
+	m_position += m_movement;
+	m_model = glm::translate(m_model, glm::vec3(m_movement.x, m_movement.y, 0));
 	m_movement = glm::vec2(0.f);
 }
+
 
 void Wall::UpdateGraphics(Color _color)
 {

@@ -11,6 +11,8 @@ public:
 	void UpdatePhysics();
 	glm::vec2 GetPosition() override;
 	void UpdateIA() override;
+	void Draw() override;
+	void Move(glm::vec2 _scrolling) override;
 private:
 	float m_shape[12] = {
 		0.01f, -0.01f, 0.0f,
@@ -28,6 +30,5 @@ private:
 	glm::vec2 m_position{0.f};
 	glm::vec2 m_movement{0.f};
 	PhysicsComponent* m_rigidbody;
-	void Draw(glm::vec2 _scrolling) override;
 };	
 

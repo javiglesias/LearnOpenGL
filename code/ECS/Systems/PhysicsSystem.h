@@ -1,17 +1,18 @@
+// ReSharper disable CppInconsistentNaming
 #pragma once
 #include <vector>
 #include "../Entity.h"
 class PhysicsSystem
 {
 public:
-	PhysicsSystem(){};
+	PhysicsSystem() = default;
 	void UpdatePhysics();
 	void AddStaticWorld(Entity*);
 	void AddDynamicWorld(Entity*);
 	bool GonnaCollideWith(Entity*);
-	bool GonnaCollide(Entity* _one, Entity* _two);
+	static bool GonnaCollide(Entity* _one, Entity* _two);
 	void FreeOutOfBounds(std::vector<Entity*>*);
-	void IsColliding(Entity* _entity, std::vector<Entity*> _collisionable_world);
+	static void IsColliding(Entity* _entity, std::vector<Entity*> _collisionable_world);
 private:
 	std::vector<Entity*> m_static_world{};	//	Colisiones estaticas
 	std::vector<Entity*> m_dynamic_world{};

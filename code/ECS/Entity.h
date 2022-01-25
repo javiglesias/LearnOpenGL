@@ -32,6 +32,11 @@ public:
 	{
 		float w;
 		float h;
+		Shape_Size()
+		{
+			w = -1;
+			h = -1;
+		}
 		Shape_Size(float _w, float _h)
 		{
 			w = _w;

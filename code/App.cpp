@@ -144,16 +144,12 @@ int App::run()
 	m_brain = new AISystem();
 	m_physics_system = new PhysicsSystem();
 	//	TODO Aqui cuando se reinicia el nivel, se estan pintando 2 puestas de salida.
-	m_exit_door = new Door(new Shader("code\\shaders\\instance.vert", "code\\shaders\\instance.frag", "DOOR"), 
-		glm::vec2(-0.5f,-0.49f));
-	m_npc = new NPC(new Shader("code\\shaders\\instance.vert", "code\\shaders\\instance.frag", "NPC"),
-		glm::vec2(0.5f, 0.49f));
+	/*m_exit_door = new Door(new Shader("code\\shaders\\instance.vert", "code\\shaders\\instance.frag", "DOOR"), 
+		glm::vec2(-1.f,-1.f));*/
 refresh:
-	m_sound_system->PlayMusic("flies.wav");
-	m_hero_char = new Hero(new Shader("code\\shaders\\basic.vert", "code\\shaders\\basic.frag", "HERO"), glm::vec2(0,0));
+	//m_sound_system->PlayMusic("flies.wav");
 	m_dynamic_world.clear();
-	m_static_world.push_back(m_npc);
-	for (unsigned int i = 0; i < 10; i++)
+	/*for (unsigned int i = 0; i < 10; i++)
 	{
 		float x_pos = ((rand() % SCREEN_WIDTH) / 1000.0) - 0.5;
 		Sleep(3);
@@ -161,25 +157,51 @@ refresh:
 		m_dynamic_world.push_back( new Monster(new Shader("code\\shaders\\basic.vert", "code\\shaders\\basic.frag", "MOSTRO"),
 			glm::vec2(x_pos, y_pos)));
 			
-	}
-	// TODO Generacion procedimental de la mazmorra.
-	for (unsigned int j = 0; j < 100; j++)
+	}*/
+	// Generacion procedimental de la mazmorra maximo 10 habitaciones.
+	// Super simple, TODO iteracion mas adelante.
+	for (unsigned int j = 0; j < 10; j++)
 	{
 		Wall* wall = nullptr;
 		if(m_static_world.size() > 0)
 		{
-			auto last_wall = m_static_world.at(m_static_world.size() - 1);
-			wall = new Wall(glm::vec2(0.f,0.f),
-				0.01, 0.01,
+			auto last_room = m_static_world.at(m_static_world.size() -1);
+			float is_x = rand() % 1000 / 1000.f;
+			float is_y = rand() % 1000 / 1000.f;
+			glm::vec2 init_position{};
+			if(is_x > is_y)
+			{
+				init_position = glm::vec2(last_room->GetPosition().x + last_room->GetSize().w, last_room->GetPosition().y);
+			} else
+			{
+				init_position = glm::vec2(last_room->GetPosition().x, last_room->GetPosition().y + last_room->GetSize().h);
+			}
+			wall = new Wall(init_position,
+				0.1, 0.1,
 				new Shader("code\\shaders\\instance.vert", "code\\shaders\\instance.frag", "WALL"));
-		} else
-		{
-			wall = new Wall(glm::vec2(-1.f, -1.f),
-				0.01, 0.01,
+		}
+		else{
+			wall = new Wall(glm::vec2(-0.8f, -0.8f),
+				0.1, 0.1,
 				new Shader("code\\shaders\\instance.vert", "code\\shaders\\instance.frag", "WALL"));
 		}
 		m_static_world.push_back(wall);
 	}
+
+	//	Colocamos al jugador en la primera habitacion
+	glm::vec2 init_position{};
+	init_position = glm::vec2(
+		m_static_world.at(0)->GetPosition().x,
+		m_static_world.at(0)->GetPosition().y
+	);
+	m_hero_char = new Hero(new Shader("code\\shaders\\basic.vert", "code\\shaders\\basic.frag", "HERO"), init_position);
+	init_position = glm::vec2(
+		m_static_world.at(m_static_world.size()-1)->GetPosition().x,
+		m_static_world.at(m_static_world.size() - 1)->GetPosition().y
+	);
+	m_npc = new NPC(new Shader("code\\shaders\\instance.vert", "code\\shaders\\instance.frag", "NPC"),
+		init_position);
+	m_dynamic_world.push_back(m_npc);
 	while (!glfwWindowShouldClose(m_window)) // Game loop
 	{
 		if (m_refresh)
@@ -194,20 +216,20 @@ refresh:
 		m_accumulated_time_ia += m_delta_time;
 		if (m_accumulated_time >= m_frame_cap) // Render frame
 		{
-			glClearColor(0.2f, 0.2f, 0.3f, 1.f);
+			glClearColor(0, 0, 0, 1.f);
 			glClear(GL_COLOR_BUFFER_BIT);
 			process_input(m_window);
 			m_accumulated_time = 0.f;
-			for (auto ent : m_dynamic_world)
-			{
-				ent->Draw();
-			}
 			for (auto ent : m_static_world)
 			{
 				ent->Draw();
 			}
 			m_hero_char->Draw();
-			m_exit_door->Draw();
+			for (auto ent : m_dynamic_world)
+			{
+				ent->Draw();
+			}
+			//m_exit_door->Draw();
 
 			glfwSwapBuffers(m_window);
 			glfwPollEvents();
@@ -219,11 +241,11 @@ refresh:
 			//	Comprobamos las colisiones con el mundo estatico antes de avanzar.
 			m_npc->UpdatePhysics(m_hero_char, 
 				m_hero_char->GetInteracting());
-			if (m_physics_system->GonnaCollide(m_hero_char, m_exit_door))
+			/*if (m_physics_system->GonnaCollide(m_hero_char, m_exit_door))
 			{
 				refresh_level();
 				goto refresh;
-			}
+			}*/
 			for(auto ent : m_static_world)
 			{
 				ent->Move(m_scrolling);
@@ -232,7 +254,7 @@ refresh:
 			{
 				ent->Move(m_scrolling);
 			}
-			m_exit_door->Move(m_scrolling);
+			//m_exit_door->Move(m_scrolling);
 			m_scrolling = glm::vec2(0.f);
 		}
 		if (m_accumulated_time_ia >= m_frame_cap_ia) // IA and Sound frame

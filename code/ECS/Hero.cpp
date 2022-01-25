@@ -18,6 +18,7 @@ Hero::Hero(Shader* _shader, glm::vec2 _init_position)
 	glEnableVertexAttribArray(0);
 	m_center.x = m_position.x;
 	m_center.y = m_position.y - 0.025f;
+	m_model = glm::translate(m_model, glm::vec3(m_position.x, m_position.y, 0.0f));
 	m_rigidbody = new PhysicsComponent(m_position, 0.02f, 0.05f);
 }
 

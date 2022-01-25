@@ -19,6 +19,7 @@ Wall::Wall(glm::vec2 _position, float _width, float _height, Shader* _shader, Co
 	m_shader_base_color = _color;
 	m_position = _position;
 	m_rigidbody = new PhysicsComponent(m_position, _width, _height);
+	m_shape_size = Shape_Size(2*_width, 2*_height);
 }
 
 PhysicsComponent* Wall::GetPhysicsComponent()
@@ -32,7 +33,7 @@ void Wall::Draw()
 	SetShaderColor(m_shader_base_color);
 	glUniformMatrix4fv(model_id, 1, GL_FALSE, glm::value_ptr(m_model));
 	m_shader->use();
-	glDrawArrays(GL_LINE_LOOP, 0, 4);
+	glDrawArrays(GL_TRIANGLES, 0, 6);
 	m_shader->unuse();
 }
 void Wall::Move(glm::vec2 _scrolling)

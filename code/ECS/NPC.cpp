@@ -19,6 +19,7 @@ NPC::NPC(Shader* _shader, glm::vec2 _init_position, float _width, float _height)
 		(void*)0);
 	glEnableVertexAttribArray(0);
 	m_rigidbody = new PhysicsComponent(m_position, 0.02f, 0.05f);
+	m_model = glm::translate(m_model, glm::vec3(m_position.x, m_position.y, 0.0f));
 }
 
 void NPC::Draw()
@@ -32,7 +33,6 @@ void NPC::Draw()
 	shader->use();
 	glDrawArrays(GL_TRIANGLES, 0, 4);
 	shader->unuse();
-	//DrawEffectArea();
 }
 void NPC::Move(glm::vec2 _scrolling)
 {

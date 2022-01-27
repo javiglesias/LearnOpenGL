@@ -52,7 +52,10 @@ private:
 	void refresh_level();
 	std::string m_hero_name;
 	bool m_is_restarting = false;
+	bool m_joystick_detected = false;
 	glm::vec2 m_scrolling{0.f};
+	const unsigned char* m_joystick_buttons;
+	const float* m_joystick_axes;
 public:
 	App(std::string _hero_name) { m_hero_name = _hero_name;}
 	~App();

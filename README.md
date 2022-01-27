@@ -3,6 +3,7 @@
 ## TODOs
 
 **TODO:** Generacion de mazmorra procedimental 
+**TODO:** Soporte para mando
 **TODO:** Iteracion del cerebro de los enemigos que ni es IA ni es na
 **TODO:** Avance de la camara con la posicion del jugador.
 

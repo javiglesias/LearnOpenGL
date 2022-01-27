@@ -3,6 +3,8 @@
 
 Wall::Wall(glm::vec2 _position, float _width, float _height, Shader* _shader, Color _color)
 {
+	m_position = _position;
+	m_shape_size = Shape_Size(_width, _height);
 	m_shader = _shader;
 	glGenBuffers(1, &VBO);
 	glGenVertexArrays(1, &VAO);
@@ -15,11 +17,8 @@ Wall::Wall(glm::vec2 _position, float _width, float _height, Shader* _shader, Co
 	model_id = glGetUniformLocation(m_shader->id, "model");
 	base_color_id = glGetUniformLocation(m_shader->id, "base_color");
 	//	Posicion de inicio donde va a empezar el enemigo
-	m_model = glm::translate(m_model, glm::vec3(_position.x, _position.y, 0));
+	m_model = glm::translate(m_model, glm::vec3(m_position.x, m_position.y, 0));
 	m_shader_base_color = _color;
-	m_position = _position;
-	m_rigidbody = new PhysicsComponent(m_position, _width, _height);
-	m_shape_size = Shape_Size(2*_width, 2*_height);
 }
 
 PhysicsComponent* Wall::GetPhysicsComponent()
@@ -38,8 +37,8 @@ void Wall::Draw()
 }
 void Wall::Move(glm::vec2 _scrolling)
 {
-	m_movement = -_scrolling;
-	m_position += m_movement;
+	m_movement -= _scrolling;
+	m_position -= _scrolling;
 	m_model = glm::translate(m_model, glm::vec3(m_movement.x, m_movement.y, 0));
 	m_movement = glm::vec2(0.f);
 }
@@ -54,6 +53,17 @@ void Wall::UpdateGraphics(Color _color)
 void Wall::UpdatePhysics()
 {
 	m_rigidbody->UpdatePhysics();
+}
+
+void Wall::UpdatePhysics(Entity* _target)
+{
+	if (_target->GetPosition().x < (m_position.x + m_shape_size.w) &&
+		_target->GetPosition().x > m_position.x &&
+		_target->GetPosition().y < (m_position.y + m_shape_size.h) &&
+		_target->GetPosition().y > m_position.y)
+	{
+		fprintf(stdout, "Collide with wall");
+	}
 }
 
 glm::vec2 Wall::GetPosition()

@@ -9,6 +9,7 @@ public:
 	void SetShaderColor(Color _color);
 	void UpdateGraphics(Color _color) override;
 	void UpdatePhysics();
+	void UpdatePhysics(Entity* _target) override;
 	glm::vec2 GetPosition() override;
 	void UpdateIA() override;
 	void Draw() override;

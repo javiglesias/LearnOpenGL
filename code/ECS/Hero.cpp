@@ -3,7 +3,10 @@
 Hero::Hero(Shader* _shader, glm::vec2 _init_position)
 {
 	shader = _shader;
-	m_position = _init_position;
+	m_shape_size = Shape_Size(0.02f, 0.05f);
+	m_center.x = m_position.x;
+	m_center.y = m_position.y - m_shape_size.w;
+	m_position = m_center;
 	m_ears = new SoundComponent();
 	m_ears->PlaySFX(m_ears->WALK);
 	glGenBuffers(1, &VBO);
@@ -16,8 +19,6 @@ Hero::Hero(Shader* _shader, glm::vec2 _init_position)
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float),
 		(void*)0);
 	glEnableVertexAttribArray(0);
-	m_center.x = m_position.x;
-	m_center.y = m_position.y - 0.025f;
 	m_model = glm::translate(m_model, glm::vec3(m_position.x, m_position.y, 0.0f));
 	m_rigidbody = new PhysicsComponent(m_position, 0.02f, 0.05f);
 }
@@ -27,7 +28,6 @@ void Hero::Draw()
 	glBindVertexArray(VAO);
 	glUniform4f(base_color_id, 0,0,1,1);
 	glUniformMatrix4fv(model_id, 1, GL_FALSE, glm::value_ptr(m_model));
-	m_translate = glm::vec2(0.0f);
 	shader->use();
 	glDrawArrays(GL_TRIANGLES, 0, 4);
 	shader->unuse();
@@ -35,19 +35,17 @@ void Hero::Draw()
 
 void Hero::Move(glm::vec2 _movement)
 {
-	if (m_center.x + _movement.x < -1 ||
-		m_center.x + _movement.x > 1	||
-		m_center.y + _movement.y < -1 ||
-		m_center.y + _movement.y > 1)
+	if (m_position.x + _movement.x < -1 ||
+		m_position.x + _movement.x > 1	||
+		m_position.y + _movement.y < -1 ||
+		m_position.y + _movement.y > 1)
 	{
 		return;
 	}
-	m_position += _movement;
 	m_translate = _movement;
+	m_position += m_translate;
 	m_model = glm::translate(m_model, glm::vec3(m_translate.x, m_translate.y, 0.0f));
-	m_center.x = m_position.x;
-	m_center.y = m_position.y - m_height/2;
-	m_rigidbody->UpdatePosition(m_center);
+	m_translate = glm::vec2(0.0f);
 }
 
 void Hero::UpdatePhysics()
@@ -68,11 +66,6 @@ glm::vec2 Hero::GetPosition()
 glm::vec2 Hero::GetNextPosition()
 {
 	return m_next_position;
-}
-
-Entity::Shape_Size Hero::GetSize()
-{
-	return Shape_Size(0.f, 0.f);
 }
 
 void Hero::SetNextPosition(glm::vec2 _next_position)

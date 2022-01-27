@@ -20,7 +20,10 @@ public:
 	void UpdateSounds() override;
 	glm::vec2 GetPosition() override;
 	glm::vec2 GetNextPosition() override;
-	Shape_Size GetSize() override;
+	Shape_Size GetSize() override
+	{
+		return m_shape_size;
+	}
 	void SetNextPosition(glm::vec2);
 	PhysicsComponent* GetPhysicsComponent() override { return m_rigidbody; };
 	void Interact(bool _interacting){m_interacting = _interacting;}
@@ -39,6 +42,7 @@ private:
 	float m_width = 0.02f;
 	float m_height = 0.05f;
 	Shader* shader;
+	Shape_Size m_shape_size;
 	PhysicsComponent* m_rigidbody{};
 	SoundComponent* m_ears;
 };

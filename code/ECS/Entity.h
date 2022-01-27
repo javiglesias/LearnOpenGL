@@ -60,6 +60,7 @@ public:
 	void virtual UpdateAnimation(){}
 	void virtual UpdateGraphics(Color _color){}
 	void virtual UpdatePhysics(){}
+	void virtual UpdatePhysics(Entity* target){}
 	void virtual UpdateSounds(){}
 	PhysicsComponent virtual *GetPhysicsComponent(){return nullptr;}
 	glm::vec2 virtual GetPosition() 

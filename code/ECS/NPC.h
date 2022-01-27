@@ -36,13 +36,12 @@ private:
 	float m_width = 0.05f;
 	float m_height = 0.05f;
 	Shader* shader;
+	Shape_Size m_shape_size;
 	PhysicsComponent* m_rigidbody{};
 	SoundComponent* m_ears;
 	glm::mat4 m_model = glm::mat4(1.0f);
 	glm::vec2 m_position{ 0.f };
 	glm::vec2 m_translate{ 0.f };
 	glm::vec2 m_next_position{ 0.f };
-
-	void DrawEffectArea();
 };
 

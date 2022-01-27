@@ -13,6 +13,7 @@ public:
 	static bool GonnaCollide(Entity* _one, Entity* _two);
 	void FreeOutOfBounds(std::vector<Entity*>*);
 	static void IsColliding(Entity* _entity, std::vector<Entity*> _collisionable_world);
+	void UpdateStaticWorld(std::vector<Entity*> _static_world);
 private:
 	std::vector<Entity*> m_static_world{};	//	Colisiones estaticas
 	std::vector<Entity*> m_dynamic_world{};

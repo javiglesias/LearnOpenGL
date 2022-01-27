@@ -14,7 +14,10 @@ void PhysicsSystem::AddDynamicWorld(Entity* _entity)
 {
 	m_dynamic_world.push_back(_entity);
 }
-
+void PhysicsSystem::UpdateStaticWorld(std::vector<Entity*> _static_world)
+{
+	m_static_world =_static_world;
+}
 bool PhysicsSystem::GonnaCollideWith(Entity* _entity)
 {
 	for (auto ent : m_static_world)
@@ -34,15 +37,8 @@ bool PhysicsSystem::GonnaCollideWith(Entity* _entity)
 /// <returns></returns>
 bool PhysicsSystem::GonnaCollide(Entity* _one, Entity* _two)
 {
-	const auto _one_rigidbody = _one->GetPhysicsComponent();
-	const auto _two_rigidbody = _two->GetPhysicsComponent();
-	if(_one_rigidbody->m_position.x < (_two_rigidbody->m_position.x + _two_rigidbody->m_width) &&
-		_one_rigidbody->m_position.x > _two_rigidbody->m_position.x &&
-		_one_rigidbody->m_position.y < (_two_rigidbody->m_position.y + _two_rigidbody->m_height) &&
-		_one_rigidbody->m_position.y > _two_rigidbody->m_position.y)
-		return true;
-	else
-		return false;	
+	_two->UpdatePhysics(_one);
+	return false;	
 }
 
 void PhysicsSystem::FreeOutOfBounds(std::vector<Entity*> *_entities)

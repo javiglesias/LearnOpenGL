@@ -2,9 +2,10 @@
 
 NPC::NPC(Shader* _shader, glm::vec2 _init_position, float _width, float _height)
 {
-	m_width = _width;
-	m_height = _height;
 	m_position = _init_position;
+	m_shape_size = Shape_Size(_width, _height);
+	m_position.x = m_position.x - m_shape_size.w;
+	m_position.y = m_position.y - m_shape_size.h;
 	shader = _shader;
 	m_ears = new SoundComponent();
 	m_ears->PlaySFX(m_ears->WALK);
@@ -26,33 +27,18 @@ void NPC::Draw()
 {
 	glBindVertexArray(VAO);
 	glUniform4f(base_color_id, 0, 1, 0, 1);
-	m_model = glm::translate(m_model, glm::vec3(m_translate.x, 
-		m_translate.y, 0.0f));
 	glUniformMatrix4fv(model_id, 1, GL_FALSE, glm::value_ptr(m_model));
-	m_translate = glm::vec2(0.0f);
 	shader->use();
 	glDrawArrays(GL_TRIANGLES, 0, 4);
 	shader->unuse();
 }
 void NPC::Move(glm::vec2 _scrolling)
 {
-	m_position = m_translate -= _scrolling;
-}
-
-void NPC::DrawEffectArea()
-{
-	glBindVertexArray(VAO_Circle);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO_Circle);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(m_collision_shape), 
-		m_collision_shape, GL_STATIC_DRAW);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float),
-		(void*)0);
-	glEnableVertexAttribArray(0);
-	glUniform4f(base_color_id, 1, 1, 1, 1);
-	glUniformMatrix4fv(model_id, 1, GL_FALSE, glm::value_ptr(m_model));
-	shader->use();
-	glDrawArrays(GL_LINE_LOOP, 0, 4);
-	shader->unuse();
+	m_position	-= _scrolling;
+	m_translate -= _scrolling;
+	m_model = glm::translate(m_model, glm::vec3(m_translate.x,
+		m_translate.y, 0.0f));
+	m_translate = glm::vec2(0.0f);
 }
 
 void NPC::UpdatePhysics()
@@ -61,15 +47,13 @@ void NPC::UpdatePhysics()
 
 void NPC::UpdatePhysics(Entity* _target, bool _interacting)
 {
-	m_position.x = m_position.x - m_width/2;
-	m_position.y = m_position.y - m_height;
-	if (_target->GetPosition().x < (m_position.x + m_width) &&
-		_target->GetPosition().x > m_position.x &&
-		_target->GetPosition().y < (m_position.y + m_height) &&
-		_target->GetPosition().y > m_position.y &&
+	if (_target->GetPosition().x < (m_position.x + m_shape_size.w) &&
+		_target->GetPosition().x >= m_position.x &&
+		_target->GetPosition().y < (m_position.y + m_shape_size.h) &&
+		_target->GetPosition().y >= m_position.y &&
 		_interacting)
 	{
-		fprintf(stdout, "Interact with the NPC");
+		fprintf(stdout, "Speak with NPC");
 	}
 }
 

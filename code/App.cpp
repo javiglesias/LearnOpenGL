@@ -22,7 +22,7 @@ void App::process_input(GLFWwindow* m_window)
 		{
 			//m_sound_system->PlaySFX("foot_step.wav");
 			m_scrolling = (sprint * MOVE_UP);
-			m_hero_char->Move(sprint * MOVE_UP);
+			//m_hero_char->Move(sprint * MOVE_UP);
 		}
 	} else if (glfwGetKey(m_window, GLFW_KEY_A) == GLFW_PRESS)
 	{
@@ -35,7 +35,7 @@ void App::process_input(GLFWwindow* m_window)
 		if (!m_physics_system->GonnaCollideWith(m_hero_char))
 		{
 			m_scrolling = (sprint * MOVE_LEFT);
-			m_hero_char->Move(sprint * MOVE_LEFT);
+			//m_hero_char->Move(sprint * MOVE_LEFT);
 		}
 	} else if (glfwGetKey(m_window, GLFW_KEY_S) == GLFW_PRESS)
 	{
@@ -48,7 +48,7 @@ void App::process_input(GLFWwindow* m_window)
 		if (!m_physics_system->GonnaCollideWith(m_hero_char))
 		{
 			m_scrolling = (sprint * MOVE_DOWN);
-			m_hero_char->Move(sprint * MOVE_DOWN);
+			//m_hero_char->Move(sprint * MOVE_DOWN);
 		}
 	} else if (glfwGetKey(m_window, GLFW_KEY_D) == GLFW_PRESS)
 	{
@@ -61,7 +61,7 @@ void App::process_input(GLFWwindow* m_window)
 		if (!m_physics_system->GonnaCollideWith(m_hero_char))
 		{
 			m_scrolling = (sprint * MOVE_RIGHT);
-			m_hero_char->Move(sprint * MOVE_RIGHT);
+			//m_hero_char->Move(sprint * MOVE_RIGHT);
 		}
 	}
 	if (glfwGetKey(m_window, GLFW_KEY_E) == GLFW_PRESS)
@@ -177,12 +177,12 @@ refresh:
 				init_position = glm::vec2(last_room->GetPosition().x, last_room->GetPosition().y + last_room->GetSize().h);
 			}
 			wall = new Wall(init_position,
-				0.1, 0.1,
+				0.2, 0.2,
 				new Shader("code\\shaders\\instance.vert", "code\\shaders\\instance.frag", "WALL"));
 		}
 		else{
-			wall = new Wall(glm::vec2(-0.8f, -0.8f),
-				0.1, 0.1,
+			wall = new Wall(glm::vec2(0.f, 0.f),
+				0.2, 0.2,
 				new Shader("code\\shaders\\instance.vert", "code\\shaders\\instance.frag", "WALL"));
 		}
 		m_static_world.push_back(wall);
@@ -204,6 +204,18 @@ refresh:
 	m_dynamic_world.push_back(m_npc);
 	while (!glfwWindowShouldClose(m_window)) // Game loop
 	{
+		int axes_count = -1, button_count = -1;
+		if(glfwJoystickPresent(GLFW_JOYSTICK_1))
+		{
+			m_joystick_detected = true;
+			m_joystick_axes = glfwGetJoystickAxes(GLFW_JOYSTICK_1, &axes_count);
+			m_joystick_buttons = glfwGetJoystickHats(GLFW_JOYSTICK_1,
+				&button_count);
+			fprintf(stdout, "X: %f\n", m_joystick_axes[0]);
+			fprintf(stdout, "Y: %f\n", m_joystick_axes[1]);
+
+		}
+
 		if (m_refresh)
 		{
 			m_refresh = false;
@@ -238,14 +250,8 @@ refresh:
 		if (m_accumulated_time_physics >= m_frame_cap_physics) // Physics frame
 		{
 			m_accumulated_time_physics = 0.f;
-			//	Comprobamos las colisiones con el mundo estatico antes de avanzar.
-			m_npc->UpdatePhysics(m_hero_char, 
-				m_hero_char->GetInteracting());
-			/*if (m_physics_system->GonnaCollide(m_hero_char, m_exit_door))
-			{
-				refresh_level();
-				goto refresh;
-			}*/
+			m_npc->UpdatePhysics(m_hero_char, m_hero_char->GetInteracting());
+			m_physics_system->UpdateStaticWorld(m_static_world);
 			for(auto ent : m_static_world)
 			{
 				ent->Move(m_scrolling);

@@ -9,7 +9,7 @@ public:
 	~SoundSystem();
 	void PlaySFX(const char*);
 	void StopSFX();
-	void PlayMusic(const char*);
+	void PlayMusic(const char*, float _speed = 1.f);
 	void StopMusic();
 	void StopAll();
 	void VolumeIncrement(float value);

@@ -41,7 +41,7 @@ void SoundSystem::StopSFX()
 	m_sound_effect->release();
 }
 
-void SoundSystem::PlayMusic(const char* _music_name)
+void SoundSystem::PlayMusic(const char* _music_name, float _speed)
 {
 	//	Long sound playing
 	char path[256] = "";
@@ -49,6 +49,7 @@ void SoundSystem::PlayMusic(const char* _music_name)
 	strcat(path, _music_name);
 	fmod_result = m_music_system->createSound(path, FMOD_DEFAULT, 0, &m_music_sound);
 	m_music_sound->setMode(FMOD_LOOP_NORMAL);
+	m_music_sound->setMusicSpeed(_speed);
 	FMOD_ERRCHECK(fmod_result);
 	fmod_result = m_music_system->playSound(m_music_sound, 0, false, &m_channel_music);
 	FMOD_ERRCHECK(fmod_result);

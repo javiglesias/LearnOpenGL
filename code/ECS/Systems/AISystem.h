@@ -1,6 +1,6 @@
 #pragma once
 #include <vector>
-#include "../Entity.h"
+#include "../Entities/Entity.h"
 
 class AISystem
 {

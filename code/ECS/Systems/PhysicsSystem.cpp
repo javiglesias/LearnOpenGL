@@ -37,8 +37,15 @@ bool PhysicsSystem::GonnaCollideWith(Entity* _entity)
 /// <returns></returns>
 bool PhysicsSystem::GonnaCollide(Entity* _one, Entity* _two)
 {
-	_two->UpdatePhysics(_one);
-	return false;	
+	if (_one->GetNextPosition().x <= (_two->GetPosition().x + _two->GetSize().w) &&
+		_one->GetNextPosition().x >= _two->GetPosition().x &&
+		_one->GetNextPosition().y <= (_two->GetPosition().y + _two->GetSize().h) &&
+		_one->GetNextPosition().y >= _two->GetPosition().y)
+	{
+		//	TODO implementar colisiones en las demas entidades, no solo el NPC.
+		return false;
+	}
+	return false;
 }
 
 void PhysicsSystem::FreeOutOfBounds(std::vector<Entity*> *_entities)

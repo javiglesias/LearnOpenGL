@@ -1,7 +1,7 @@
 // ReSharper disable CppInconsistentNaming
 #pragma once
 #include <vector>
-#include "../Entity.h"
+#include "../Entities/Entity.h"
 class PhysicsSystem
 {
 public:

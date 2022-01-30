@@ -16,5 +16,5 @@ glm::vec2 AIComponent::Update(glm::vec2 _target_position,
 	auto direction = rand() % 200 > 100.f ? direction_backward : direction_forward;
 	glm::vec2 move_to = glm::vec2(0.005f * direction.x,
 		0.005f * direction.y);
-	return move_to;
+	return -move_to;
 }

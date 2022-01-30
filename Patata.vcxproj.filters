@@ -21,7 +21,7 @@
     <ClCompile Include="code\App.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="code\ECS\Entity.cpp">
+    <ClCompile Include="code\ECS\Entities\Entity.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="code\ECS\Components\AIComponent.cpp">
@@ -63,10 +63,10 @@
     <ClCompile Include="code\Action\Action.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="code\ECS\Hero.cpp">
+    <ClCompile Include="code\ECS\Entities\Hero.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="code\ECS\Monster.cpp">
+    <ClCompile Include="code\ECS\Entities\Monster.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="code\Render\Shader.cpp">
@@ -75,7 +75,7 @@
     <ClCompile Include="dependencies\stb_image\stb_image.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="code\ECS\Wall.cpp">
+    <ClCompile Include="code\ECS\Entities\Wall.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="code\ECS\Components\SoundComponent.cpp">
@@ -96,13 +96,16 @@
     <ClCompile Include="code\ECS\Components\NetworkComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="code\ECS\Door.cpp">
+    <ClCompile Include="code\ECS\Entities\Door.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="code\ECS\Projectile.cpp">
+    <ClCompile Include="code\ECS\Entities\Projectile.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="code\ECS\NPC.cpp">
+    <ClCompile Include="code\ECS\Entities\NPC.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="code\ECS\Entities\Grass.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -110,7 +113,7 @@
     <ClInclude Include="code\App.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="code\ECS\Entity.h">
+    <ClInclude Include="code\ECS\Entities\Entity.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="code\ECS\Components\AIComponent.h">
@@ -152,10 +155,10 @@
     <ClInclude Include="code\Action\Action.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="code\ECS\Hero.h">
+    <ClInclude Include="code\ECS\Entities\Hero.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="code\ECS\Monster.h">
+    <ClInclude Include="code\ECS\Entities\Monster.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="code\Render\Shader.h">
@@ -164,7 +167,7 @@
     <ClInclude Include="dependencies\stb_image\stb_image.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="code\ECS\Wall.h">
+    <ClInclude Include="code\ECS\Entities\Wall.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="code\ECS\Components\SoundComponent.h">
@@ -191,13 +194,16 @@
     <ClInclude Include="code\ECS\Components\NetworkComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="code\ECS\Door.h">
+    <ClInclude Include="code\ECS\Entities\Door.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="code\ECS\Projectile.h">
+    <ClInclude Include="code\ECS\Entities\Projectile.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="code\ECS\NPC.h">
+    <ClInclude Include="code\ECS\Entities\NPC.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="code\ECS\Entities\Grass.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

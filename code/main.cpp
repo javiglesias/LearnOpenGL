@@ -9,6 +9,7 @@ extern "C"
 {
 	__declspec(dllexport) int AmdPowerXpressRequestHighPerformance = 1;
 }
+
 int main(int args, char** argv)
 {
 	std::string hero_name;

@@ -159,7 +159,7 @@
     <ClCompile Include="code\ECS\Components\AIComponent.cpp" />
     <ClCompile Include="code\App.cpp" />
     <ClCompile Include="code\main.cpp" />
-    <ClCompile Include="code\ECS\Entity.cpp" />
+    <ClCompile Include="code\ECS\Entities\Entity.cpp" />
     <ClCompile Include="code\ECS\Components\GraphicsComponent.cpp" />
     <ClCompile Include="code\ECS\Components\PhysicsComponent.cpp" />
     <ClCompile Include="code\ECS\Systems\GraphicSystem.cpp" />
@@ -167,20 +167,21 @@
     <ClCompile Include="code\Items\Item.cpp" />
     <ClCompile Include="code\Items\Capabilities\Defense.cpp" />
     <ClCompile Include="code\Items\Capabilities\Use.cpp" />
-    <ClCompile Include="code\ECS\Hero.cpp" />
-    <ClCompile Include="code\ECS\Monster.cpp" />
+    <ClCompile Include="code\ECS\Entities\Hero.cpp" />
+    <ClCompile Include="code\ECS\Entities\Monster.cpp" />
     <ClCompile Include="code\Network\Client\ClientConnection.cpp" />
     <ClCompile Include="code\Network\Server\ServerConnection.cpp" />
     <ClCompile Include="code\Render\Shader.cpp" />
     <ClCompile Include="dependencies\stb_image\stb_image.cpp" />
-    <ClCompile Include="code\ECS\Wall.cpp" />
+    <ClCompile Include="code\ECS\Entities\Wall.cpp" />
     <ClCompile Include="code\ECS\Components\SoundComponent.cpp" />
     <ClCompile Include="code\ECS\Systems\SoundSystem.cpp" />
     <ClCompile Include="code\ECS\Systems\NetworkSystem.cpp" />
     <ClCompile Include="code\ECS\Components\NetworkComponent.cpp" />
-    <ClCompile Include="code\ECS\Door.cpp" />
-    <ClCompile Include="code\ECS\Projectile.cpp" />
-    <ClCompile Include="code\ECS\NPC.cpp" />
+    <ClCompile Include="code\ECS\Entities\Door.cpp" />
+    <ClCompile Include="code\ECS\Entities\Projectile.cpp" />
+    <ClCompile Include="code\ECS\Entities\NPC.cpp" />
+    <ClCompile Include="code\ECS\Entities\Grass.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="code\Action\Action.h" />
@@ -191,7 +192,7 @@
     <ClInclude Include="code\ECS\Components\AnimationComponent.h" />
     <ClInclude Include="code\ECS\Components\AIComponent.h" />
     <ClInclude Include="code\App.h" />
-    <ClInclude Include="code\ECS\Entity.h" />
+    <ClInclude Include="code\ECS\Entities\Entity.h" />
     <ClInclude Include="code\ECS\Components\GraphicsComponent.h" />
     <ClInclude Include="code\ECS\Components\PhysicsComponent.h" />
     <ClInclude Include="code\ECS\Systems\GraphicSystem.h" />
@@ -199,21 +200,22 @@
     <ClInclude Include="code\Items\Item.h" />
     <ClInclude Include="code\Items\Capabilities\Defense.h" />
     <ClInclude Include="code\Items\Capabilities\Use.h" />
-    <ClInclude Include="code\ECS\Hero.h" />
-    <ClInclude Include="code\ECS\Monster.h" />
+    <ClInclude Include="code\ECS\Entities\Hero.h" />
+    <ClInclude Include="code\ECS\Entities\Monster.h" />
     <ClInclude Include="code\Network\Client\ClientConnection.h" />
     <ClInclude Include="code\Network\Definitions.hpp" />
     <ClInclude Include="code\Network\Server\ServerConnection.h" />
     <ClInclude Include="code\Render\Shader.h" />
     <ClInclude Include="dependencies\stb_image\stb_image.h" />
-    <ClInclude Include="code\ECS\Wall.h" />
+    <ClInclude Include="code\ECS\Entities\Wall.h" />
     <ClInclude Include="code\ECS\Components\SoundComponent.h" />
     <ClInclude Include="code\ECS\Systems\SoundSystem.h" />
     <ClInclude Include="code\ECS\Systems\NetworkSystem.h" />
     <ClInclude Include="code\ECS\Components\NetworkComponent.h" />
-    <ClInclude Include="code\ECS\Door.h" />
-    <ClInclude Include="code\ECS\Projectile.h" />
-    <ClInclude Include="code\ECS\NPC.h" />
+    <ClInclude Include="code\ECS\Entities\Door.h" />
+    <ClInclude Include="code\ECS\Entities\Projectile.h" />
+    <ClInclude Include="code\ECS\Entities\NPC.h" />
+    <ClInclude Include="code\ECS\Entities\Grass.h" />
   </ItemGroup>
   <ItemGroup>
     <Font Include="resources\AncientModernTales-a7Po.ttf" />

@@ -2,19 +2,20 @@
 
 ## TODOs
 
-**TODO:** Generacion de mazmorra procedimental 
-**TODO:** Soporte para mando
-**TODO:** Iteracion del cerebro de los enemigos que ni es IA ni es na
-**TODO:** Avance de la camara con la posicion del jugador.
+**TODO:** Radio de atenuacion del sonido FMOD.
+**TODO:** Ajustar colisiones, estan un poco off (Puede que por el scrolling).
 
-**TODO:** Carga de recursos ¿multihilo?
+**TODO:** Objetos inteactuables
+**TODO:** VFX
+**TODO:** Iteracion del cerebro de los enemigos que ni es IA ni es na
 **TODO:** Habilidades enemigas y aliadas
 **TODO:** Interfaz para el juego (dialogos, cooldowns, menu)
-**TODO:** Objetos inteactuables
+**TODO:** Carga de recursos ¿multihilo?
 **TODO:** Dialogos/misiones
-**TODO:** Meter imGUI al proyecto para desarrollar
 
 ## DONEs
 
 **DONE:** NPC interactuable.
+**DONE:** Soporte para mando
 **DONE:** Entidad NPC.
+**DONE:** Avance de la camara con la posicion del jugador.

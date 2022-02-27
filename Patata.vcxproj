@@ -127,6 +127,9 @@
       <AdditionalLibraryDirectories>C:\Program Files %28x86%29\FMOD SoundSystem\FMOD Studio API Windows\api\core\lib\x64;C:\Users\B00l\source\repos\Patata\dependencies\glad-master\Debug;C:\Users\B00l\source\repos\Patata\dependencies\glfw-master\Debug\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>glad.lib;glfw3.lib;fmod_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy $(ProjectDir)code\shaders\*  $(ProjectDir)$(Platform)\$(Configuration)\shaders /y</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -149,6 +152,9 @@
       <AdditionalLibraryDirectories>C:\Program Files %28x86%29\FMOD SoundSystem\FMOD Studio API Windows\api\core\lib\x64;C:\Users\B00l\source\repos\Patata\dependencies\glad-master\Debug;C:\Users\B00l\source\repos\Patata\dependencies\glfw-master\Debug\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>glad.lib;glfw3.lib;fmod_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy $(ProjectDir)code\shaders\*  $(ProjectDir)$(Platform)\$(Configuration)\shaders /y</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="code\Action\Action.cpp" />
@@ -172,8 +178,10 @@
     <ClCompile Include="code\Network\Client\ClientConnection.cpp" />
     <ClCompile Include="code\Network\Server\ServerConnection.cpp" />
     <ClCompile Include="code\Render\Shader.cpp" />
+    <ClCompile Include="code\ECS\Entities\Corridor.cpp" />
+    <ClCompile Include="code\Physics\Collider.cpp" />
     <ClCompile Include="dependencies\stb_image\stb_image.cpp" />
-    <ClCompile Include="code\ECS\Entities\Wall.cpp" />
+    <ClCompile Include="code\ECS\Entities\Room.cpp" />
     <ClCompile Include="code\ECS\Components\SoundComponent.cpp" />
     <ClCompile Include="code\ECS\Systems\SoundSystem.cpp" />
     <ClCompile Include="code\ECS\Systems\NetworkSystem.cpp" />
@@ -181,7 +189,6 @@
     <ClCompile Include="code\ECS\Entities\Door.cpp" />
     <ClCompile Include="code\ECS\Entities\Projectile.cpp" />
     <ClCompile Include="code\ECS\Entities\NPC.cpp" />
-    <ClCompile Include="code\ECS\Entities\Grass.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="code\Action\Action.h" />
@@ -206,8 +213,10 @@
     <ClInclude Include="code\Network\Definitions.hpp" />
     <ClInclude Include="code\Network\Server\ServerConnection.h" />
     <ClInclude Include="code\Render\Shader.h" />
+    <ClInclude Include="code\ECS\Entities\Corridor.h" />
+    <ClInclude Include="code\Physics\Collider.h" />
     <ClInclude Include="dependencies\stb_image\stb_image.h" />
-    <ClInclude Include="code\ECS\Entities\Wall.h" />
+    <ClInclude Include="code\ECS\Entities\Room.h" />
     <ClInclude Include="code\ECS\Components\SoundComponent.h" />
     <ClInclude Include="code\ECS\Systems\SoundSystem.h" />
     <ClInclude Include="code\ECS\Systems\NetworkSystem.h" />
@@ -215,7 +224,6 @@
     <ClInclude Include="code\ECS\Entities\Door.h" />
     <ClInclude Include="code\ECS\Entities\Projectile.h" />
     <ClInclude Include="code\ECS\Entities\NPC.h" />
-    <ClInclude Include="code\ECS\Entities\Grass.h" />
   </ItemGroup>
   <ItemGroup>
     <Font Include="resources\AncientModernTales-a7Po.ttf" />
@@ -223,6 +231,8 @@
   <ItemGroup>
     <None Include="code\shaders\basic.frag" />
     <None Include="code\shaders\basic.vert" />
+    <None Include="code\shaders\basic_water.frag" />
+    <None Include="code\shaders\basic_water.vert" />
     <None Include="code\shaders\instance.frag" />
     <None Include="code\shaders\instance.vert" />
     <None Include="README.md" />

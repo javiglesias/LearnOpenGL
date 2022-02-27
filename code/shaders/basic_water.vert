@@ -10,5 +10,6 @@ out vec4 Base_Color;
 void main()
 {
 	gl_Position = model * vec4(aPos, 1.0);
-	Base_Color = base_color;
+	vec4 final_water = vec4(85/255, 1, 1, 1);
+	Base_Color = final_water;
 }

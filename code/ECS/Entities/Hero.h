@@ -7,7 +7,7 @@ class Hero :
 public:
     Hero(){}
     Hero(Shader* _shader, glm::vec2 _position = glm::vec2(0,0),
-		float _width = .02f, float _height = .02f);
+		float _width = .04f, float _height = .02f);
 	void Draw() override;
 	float shape[15] = {
 		//	x,y,z
@@ -48,4 +48,3 @@ private:
 	PhysicsComponent* m_rigidbody{};
 	SoundComponent* m_ears;
 };
-

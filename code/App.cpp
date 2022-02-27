@@ -2,8 +2,7 @@
 #include <cstdio>
 #include <wtypes.h>
 #include "common.h"
-#include "ECS/Entities/Wall.h"
-
+#include "ECS/Entities/Room.h"
 void refresh()
 {
 	//fprintf(stdout, "\nCallback de hablar con el NPC.\n");
@@ -23,19 +22,15 @@ void App::process_input(GLFWwindow* m_window)
 		m_joystick_axes = glfwGetJoystickAxes(GLFW_JOYSTICK_1, &axes_count);
 		m_joystick_buttons = glfwGetJoystickButtons(GLFW_JOYSTICK_1,
 			&button_count);
-
-		if(m_joystick_buttons[0] == GLFW_PRESS)
-			fprintf(stdout, "Button 0", m_joystick_buttons[0]);
-		else if (m_joystick_buttons[1] == GLFW_PRESS)
-			fprintf(stdout, "Button 1");
-		else if(m_joystick_buttons[2] == GLFW_PRESS)
-			fprintf(stdout, "Button 2", m_joystick_buttons[0]);
-		else if (m_joystick_buttons[3] == GLFW_PRESS)
-			fprintf(stdout, "Button 3", m_joystick_buttons[1]);
+		m_gamepad_L_yAxis = round(m_joystick_axes[1]);
+		m_gamepad_L_xAxis = round(m_joystick_axes[0]);
+		m_gamepad_A = m_joystick_buttons[0];
+		m_gamepad_B = m_joystick_buttons[1];
+		m_gamepad_X = m_joystick_buttons[2];
+		m_gamepad_Y = m_joystick_buttons[3];
 
 	}
-	if (glfwGetKey(m_window, GLFW_KEY_W) == GLFW_PRESS ||
-		round(m_joystick_axes[1]) < 0.f)
+	if (glfwGetKey(m_window, GLFW_KEY_W) == GLFW_PRESS || m_gamepad_L_yAxis < 0.f)
 	{
 		float sprint = 1.f;
 		if (glfwGetKey(m_window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS )
@@ -53,7 +48,7 @@ void App::process_input(GLFWwindow* m_window)
 			}
 		}
 	} else if (glfwGetKey(m_window, GLFW_KEY_A) == GLFW_PRESS ||
-		round(m_joystick_axes[0]) < 0.f)
+		m_gamepad_L_xAxis < 0.f)
 	{
 		float sprint = 1.f;
 		if (glfwGetKey(m_window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
@@ -70,7 +65,7 @@ void App::process_input(GLFWwindow* m_window)
 			}
 		}
 	} else if (glfwGetKey(m_window, GLFW_KEY_S) == GLFW_PRESS ||
-		round(m_joystick_axes[1]) > 0.f)
+		m_gamepad_L_yAxis > 0.f)
 	{
 		float sprint = 1.f;
 		if (glfwGetKey(m_window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
@@ -87,7 +82,7 @@ void App::process_input(GLFWwindow* m_window)
 			}
 		}
 	} else if (glfwGetKey(m_window, GLFW_KEY_D) == GLFW_PRESS ||
-		round(m_joystick_axes[0]) > 0.f)
+		m_gamepad_L_xAxis > 0.f)
 	{
 		float sprint = 1.f;
 		if (glfwGetKey(m_window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
@@ -104,7 +99,8 @@ void App::process_input(GLFWwindow* m_window)
 			}
 		}
 	}
-	if (glfwGetKey(m_window, GLFW_KEY_E) == GLFW_PRESS)
+	if (glfwGetKey(m_window, GLFW_KEY_E) == GLFW_PRESS ||
+		m_gamepad_A == GLFW_PRESS)
 	{
 		m_hero_char->Interact(true);
 	}
@@ -112,17 +108,19 @@ void App::process_input(GLFWwindow* m_window)
 	{
 		m_hero_char->Interact(false);
 	}
-	if (glfwGetKey(m_window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+	if (glfwGetKey(m_window, GLFW_KEY_ESCAPE) == GLFW_PRESS ||
+		m_gamepad_X == GLFW_PRESS)
 	{
-		glfwTerminate();
-		exit(0);
+		glfwSetWindowShouldClose(m_window, true);
 	}
-	if (glfwGetKey(m_window, GLFW_KEY_R) == GLFW_PRESS && !m_is_restarting)
+	if ((glfwGetKey(m_window, GLFW_KEY_R) == GLFW_PRESS ||
+		m_gamepad_Y == GLFW_PRESS) && !m_is_restarting)
 	{
 		m_is_restarting = true;
 		refresh_level();
 	}
-	else if (glfwGetKey(m_window, GLFW_KEY_R) == GLFW_RELEASE && m_is_restarting)
+	else if ((glfwGetKey(m_window, GLFW_KEY_R) == GLFW_RELEASE ||
+		m_gamepad_Y == GLFW_RELEASE) && m_is_restarting)
 	{
 		m_is_restarting = false;
 	}
@@ -137,25 +135,74 @@ void App::process_input(GLFWwindow* m_window)
 void App::refresh_level()
 {
 	m_current_level++;
-	fprintf(stdout, "\nNivel de cerveza: %d\n", m_current_level);
 	this->m_refresh = true;
+	m_rooms.clear();
+	m_props_world.clear();
+	m_corridors.clear();
+#if !MAP_GENERATION
+	fprintf(stdout, "\nNivel de cerveza: %d\n", m_current_level);
 	m_dynamic_world.clear();
 	m_npcs.clear();
 	m_enemies.clear();
-	m_static_world.clear();
 	m_sound_system->StopAll();
 	m_sound_system->PlaySFX("open_door.wav");
+#endif
+
 }
 
 bool App::enemies_left()
 {
-	for (auto enemy : m_enemies)
+	for (i = 0; i < m_enemies.size(); ++i)
 	{
-		if(enemy->m_show == true)
+		if(m_enemies[i]->m_show == true)
 			return true;
 		else continue;
 	}
 	return false;
+}
+
+void App::generate_map_rooms(int _value)
+{
+	/* Generacion procedimental de la mazmorra 
+	 Cada 2 habitaciones hay que conectarlas por un pasillo*/
+	Room* last_room = m_rooms.size() > 0 ? m_rooms[m_rooms.size() - 1] : nullptr;
+	int rooms_to_generate = _value + 1; // el numero de salas es incremental en cada piso
+	float room_width = 0.2f, room_height = 0.2f;
+	float x_pos = -1.f;
+	float y_pos = -1.f;
+	if(last_room)
+	{
+		room_width = last_room->GetSize().w;
+		room_height = last_room->GetSize().h;
+		x_pos = last_room->GetPosition().x;
+		y_pos = last_room->GetPosition().y;
+	}
+	Room* room = nullptr;
+	glm::vec2 init_position
+	{
+		x_pos+room_width,
+		y_pos+2*room_height
+	};
+	rooms_to_generate <<= rooms_to_generate; // por cada habitacion, generamos 2, una a cada lado.
+	for (int j = 0; j < rooms_to_generate; j++)
+	{
+		int room_rng = rand() % 100;
+		if(room_rng > 50 || room_rng > 75)
+		{
+			init_position = glm::vec2(1.2 * j * room_width,init_position.y);
+			room = new Room(init_position, room_width, room_height,
+				new Shader("code\\shaders\\instance.vert",
+					"code\\shaders\\instance.frag", "Room"));
+			m_rooms.push_back(room);
+		} else if(room_rng < 50 || room_rng < 75)
+		{
+			init_position = glm::vec2(-1.2 * j * room_width,init_position.y);
+			room = new Room(init_position, room_width, room_height,
+				new Shader("code\\shaders\\instance.vert",
+					"code\\shaders\\instance.frag", "Room"));
+			m_rooms.push_back(room);
+		}
+	}
 }
 
 App::~App()
@@ -163,7 +210,7 @@ App::~App()
 	free(m_sound_system);
 	free(m_hero_char);
 	m_dynamic_world.clear();
-	m_static_world.clear();
+	m_rooms.clear();
 	m_npcs.clear();
 }
 int App::run()
@@ -171,7 +218,7 @@ int App::run()
 	srand(NULL);
 	fprintf(stdout,"Seed: %d", rand());
 	glfwInit();
-	m_current_frame = glfwGetTime();
+	m_current_frame = static_cast<float>(glfwGetTime());
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE,
@@ -200,91 +247,42 @@ int App::run()
 	m_physics_system = new PhysicsSystem();
 	
 refresh:
+#if !MAP_GENERATION
 	m_sound_system->PlayMusic("Reflections.wav", m_current_level/1.f);
 	m_dynamic_world.clear();
 	//	 Generate 4 monsters at a time
-	for (unsigned int i = 0; i < 10; i++)
+	float x_pos = ((rand() % SCREEN_WIDTH) / 1010.0);
+	float y_pos = ((rand() % SCREEN_HEIGHT) / 1010.0);
+	for (i = 0; i < 10; i++)
 	{
-		float x_pos = ((rand() % SCREEN_WIDTH) / 1010.0);
-		Sleep(3);
-		float y_pos = ((rand() % SCREEN_HEIGHT) / 1010.0);
 		m_enemies.push_back( new Monster(new Shader("code\\shaders\\basic.vert", "code\\shaders\\basic.frag", "MOSTRO"),
 			glm::vec2(x_pos, y_pos)));
-
-		x_pos = ((rand() % SCREEN_WIDTH) / -1010.0);
-		Sleep(3);
-		y_pos = ((rand() % SCREEN_HEIGHT) / 1010.0);
-		m_enemies.push_back(new Monster(new Shader("code\\shaders\\basic.vert", "code\\shaders\\basic.frag", "MOSTRO"),
-			glm::vec2(x_pos, y_pos)));
-
-		x_pos = ((rand() % SCREEN_WIDTH) / 1010.0);
-		Sleep(3);
-		y_pos = ((rand() % SCREEN_HEIGHT) / -1010.0);
-		m_enemies.push_back(new Monster(new Shader("code\\shaders\\basic.vert", "code\\shaders\\basic.frag", "MOSTRO"),
-			glm::vec2(x_pos, y_pos)));
-
-		x_pos = ((rand() % SCREEN_WIDTH) / -1010.0);
-		Sleep(3);
-		y_pos = ((rand() % SCREEN_HEIGHT) / -1010.0);
-		m_enemies.push_back(new Monster(new Shader("code\\shaders\\basic.vert", "code\\shaders\\basic.frag", "MOSTRO"),
-			glm::vec2(x_pos, y_pos)));
-			
 	}
-	// Generacion procedimental de la mazmorra 
-	// Super simple, TODO iteracion mas adelante.
-#if 1
-	for (unsigned int j = 0; j < 100; j++)
-	{
-		Wall* wall = nullptr;
-		if(m_static_world.size() > 0)
-		{
-			float is_x = rand() % 1000 / 1000.f;
-			float is_y = rand() % 1000 / 1000.f;
-			glm::vec2 init_position{};
-			auto last_wall = m_static_world.at(m_static_world.size()-1);
-			if(is_x > is_y)
-			{
-				float x_pos = last_wall->GetPosition().x +
-					last_wall->GetSize().w;
-				if(x_pos > 1.0f || x_pos < -1.0f)
-				{
-					x_pos = 0.f;
-				}
-				init_position = glm::vec2(x_pos, last_wall->GetPosition().y);
-			} else
-			{
-				float y_pos	= last_wall->GetPosition().y + last_wall->GetSize().h;
-				if(y_pos > 1.f || y_pos < -1.f)
-				{
-					y_pos = 0.f;
-				}
-				init_position = glm::vec2(last_wall->GetPosition().x, y_pos);
-			}
-			wall =new Wall(init_position,
-				0.1f, 0.1f,
-				new Shader("code\\shaders\\instance.vert", "code\\shaders\\instance.frag", "WALL"));
-		}
-		else
-		{
-			wall = new Wall(glm::vec2(-1.f,-1.f),
-				0.1f, 0.1f,
-				new Shader("code\\shaders\\instance.vert", "code\\shaders\\instance.frag", "WALL"));
-		}
-		m_static_world.push_back(wall);
-	}
-#else
-	Wall* wall = nullptr;
-	wall = new Wall(glm::vec2(-1.f, -1.f),
-		0.1f, 0.1f,
-		new Shader("code\\shaders\\instance.vert", "code\\shaders\\instance.frag", "WALL"));
-	m_static_world.push_back(wall);
 #endif
 
+#if 1
+	begin_map_generation = clock();
+	generate_map_rooms(0);
+	generate_map_rooms(1);
+	generate_map_rooms(2);
+	end_map_generation = clock();
+	fprintf(stdout, "Map generation elapsed time: %ld\n", end_map_generation - begin_map_generation);
+#else
+	Room* first_room = nullptr;
+	first_room = new Room(glm::vec2(-1.f, -1.f),
+		0.1f, 0.1f,
+		new Shader("code\\shaders\\basic_water.vert", "code\\shaders\\basic_water.frag", "Room"));
+	m_rooms.push_back(first_room);
+#endif
 	//	Colocamos al jugador en la primera habitacion
-	m_hero_char = new Hero(new Shader("code\\shaders\\basic.vert", "code\\shaders\\basic.frag", "HERO"), glm::vec2(0, 0.f));
-	m_npcs.push_back(new NPC(new Shader("code\\shaders\\instance.vert", "code\\shaders\\instance.frag", "NPC"), 
-		m_static_world.at(rand() % m_static_world.size())->GetPosition()));
-
+	m_hero_char = new Hero(new Shader("code\\shaders\\basic.vert", "code\\shaders\\basic.frag", "HERO"), 
+	m_rooms.at(0)->GetPosition(),
+		.02f, .04f);
+	/*m_npcs.push_back(new NPC(new Shader("code\\shaders\\instance.vert", "code\\shaders\\instance.frag", "NPC"), 
+		m_rooms.at(rand() % m_rooms.size())->GetPosition()));*/
+#if 0
+	return 0;
+#endif
 	while (!glfwWindowShouldClose(m_window)) // Game loop
 	{
 		if (m_refresh)
@@ -292,30 +290,42 @@ refresh:
 			m_refresh = false;
 			goto refresh;
 		}
-		m_new_frame = glfwGetTime();
+		m_new_frame = static_cast<float>(glfwGetTime());
 		m_delta_time = m_new_frame - m_current_frame;
 		m_accumulated_time += m_delta_time;
 		m_accumulated_time_physics += m_delta_time;
 		m_accumulated_time_ia += m_delta_time;
 		if (m_accumulated_time >= m_frame_cap) // Render frame
 		{
-			glClearColor(0, 0, 0, 1.f);
+			glClearColor(85.f / 255.f, 170.f / 255.f, 85.f / 255.f, 1.f);
 			glClear(GL_COLOR_BUFFER_BIT);
 			process_input(m_window);
 			m_accumulated_time = 0.f;
-			for (auto ent : m_static_world)
+			//	Lo primero en dibujar, el fondo
+			for (i=0; i < m_props_world.size(); ++i)
 			{
-				ent->Draw();
+				
+				m_props_world[i]->Draw();
 			}
+			for (i = 0; i < m_rooms.size(); ++i)
+			{
+				m_rooms[i]->Draw();
+			}
+			for (i=0; i < m_corridors.size(); ++i)
+			{
+				m_corridors[i]->Draw();
+			}
+#if !MAP_GENERATION
+			for (i = 0; i < m_enemies.size(); ++i)
+			{
+				m_enemies[i]->Draw();
+			}
+			for(i = 0; i < m_npcs.size(); ++i)
+			{
+				m_npcs[i]->Draw();
+			}
+#endif
 			m_hero_char->Draw();
-			for (auto monster : m_enemies)
-			{
-				monster->Draw();
-			}
-			for(auto npc : m_npcs)
-			{
-				npc->Draw();
-			}
 
 			glfwSwapBuffers(m_window);
 			glfwPollEvents();
@@ -324,30 +334,41 @@ refresh:
 		if (m_accumulated_time_physics >= m_frame_cap_physics) // Physics frame
 		{
 			m_accumulated_time_physics = 0.f;
-			m_physics_system->UpdateStaticWorld(m_static_world);
-			for (auto npc : m_npcs)
+			register int i = 0;
+#if !MAP_GENERATION
+			m_physics_system->UpdateStaticWorld(m_rooms);
+			for (i = 0; i < m_npcs.size(); ++i)
 			{
 				void (*callback)() = &refresh;
-				if(npc->UpdatePhysics(m_hero_char, m_hero_char->GetInteracting(), callback) && !enemies_left())
+				if(m_npcs[i]->UpdatePhysics(m_hero_char, m_hero_char->GetInteracting(), callback) && !enemies_left())
 				{
 					refresh_level();
 				}
-				npc->Move(m_scrolling);
+				m_npcs[i]->Move(m_scrolling);
 			}
-			for (auto monster : m_enemies)
+			for (i = 0; i < m_enemies.size(); ++i)
 			{
-				if(monster->UpdatePhysics(m_hero_char))
+				if(m_enemies[i]->UpdatePhysics(m_hero_char))
 				{
 					continue;
 				}
 				else
 				{
-					monster->Move(m_scrolling);
+					m_enemies[i]->Move(m_scrolling);
 				}
 			}
-			for (auto ent : m_static_world)
+#endif
+			for (i = 0; i < m_props_world.size(); ++i)
 			{
-				ent->Move(m_scrolling);
+				m_props_world[i]->Move(m_scrolling);
+			}
+			for (i = 0; i < m_rooms.size(); ++i)
+			{
+				m_rooms[i]->Move(m_scrolling);
+			}
+			for (i = 0; i < m_corridors.size(); ++i)
+			{
+				m_corridors[i]->Move(m_scrolling);
 			}
 			m_scrolling = glm::vec2(0.f);
 		}
@@ -361,7 +382,7 @@ refresh:
 			}*/
 			m_accumulated_time_ia = 0.f;
 		}
-		m_current_frame = glfwGetTime();
+		m_current_frame = static_cast<float>(glfwGetTime());
 	}
 	glfwTerminate();
 	return 0;

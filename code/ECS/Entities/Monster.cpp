@@ -18,6 +18,7 @@ Monster::Monster(Shader* _shader, glm::vec2 _init_position)
 	glEnableVertexAttribArray(0);
 	model_id = glGetUniformLocation(shader->id, "model");
 	base_color_id = glGetUniformLocation(shader->id, "base_color");
+	alive_id = glGetUniformLocation(shader->id, "is_alive");
 	//	Posicion de inicio donde va a empezar el enemigo
 	m_model = glm::translate(m_model, glm::vec3(_init_position.x, _init_position.y, 0.0f));
 	m_position = _init_position;
@@ -26,16 +27,15 @@ Monster::Monster(Shader* _shader, glm::vec2 _init_position)
 
 void Monster::Draw()
 {
-	if(m_show)
-	{
-		glBindVertexArray(VAO);
-		glUniform4f(base_color_id, 1, 0, 0, 1);
-		glUniformMatrix4fv(model_id, 1, GL_FALSE, glm::value_ptr(m_model));
-		shader->use();
-		glDrawArrays(GL_TRIANGLES, 0, 4);
-		shader->unuse();
-		//DrawEffectArea();
-	}
+	glBindVertexArray(VAO);
+	glUniform4f(base_color_id, 1, 0, 0, 1);
+	glUniform1i(alive_id, (int)!m_show);
+	glUniformMatrix4fv(model_id, 1, GL_FALSE, glm::value_ptr(m_model));
+	shader->use();
+	glDrawArrays(GL_TRIANGLES, 0, 4);
+	shader->unuse();
+	//DrawEffectArea();
+
 }
 
 void Monster::DrawEffectArea()

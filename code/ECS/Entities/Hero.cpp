@@ -4,6 +4,13 @@ Hero::Hero(Shader* _shader, glm::vec2 _init_position, float _width, float _heigh
 {
 	shader = _shader;
 	m_shape_size = Shape_Size(_width, _height);
+	//	Width
+	shape[3] = -_width;
+	shape[6] = _width;
+	//	Height
+	shape[4] = -_height;
+	shape[7] = -_height;
+
 	m_position = _init_position;
 	m_ears = new SoundComponent();
 	m_ears->PlaySFX(m_ears->WALK);
@@ -18,6 +25,8 @@ Hero::Hero(Shader* _shader, glm::vec2 _init_position, float _width, float _heigh
 		(void*)0);
 	glEnableVertexAttribArray(0);
 	m_model = glm::translate(m_model, glm::vec3(m_position.x, m_position.y, 0.0f));
+	m_position.y = m_position.y + _height;
+	m_position.x = m_position.x + _width;
 }
 
 void Hero::Draw()
@@ -40,6 +49,14 @@ void Hero::Move(glm::vec2 _movement)
 		return;
 	}
 	m_translate = _movement;
+	//if(m_translate.x > 0) // Giro a derecha
+	//{
+	//	m_model = glm::rotate(m_model,glm::radians(90.f), glm::vec3(1,1,0));
+	//}
+	//else if(m_translate.x < 0) // Giro a izquierda
+	//{
+	//	m_model = glm::rotate(m_model, glm::radians(-90.f), glm::vec3(-1, -1, 0));
+	//}
 	m_position += m_translate;
 	m_model = glm::translate(m_model, glm::vec3(m_translate.x, m_translate.y, 0.0f));
 	m_translate = glm::vec2(0.0f);
@@ -52,7 +69,7 @@ void Hero::UpdatePhysics()
 
 void Hero::UpdateSounds()
 {
-	
+
 }
 
 glm::vec2 Hero::GetPosition()

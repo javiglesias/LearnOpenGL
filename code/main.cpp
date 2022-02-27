@@ -1,6 +1,7 @@
 #include "App.h"
 #include <wtypes.h>
 #include <fstream>
+
 // Dedicated GPU for laptops with 2 https://stackoverflow.com/questions/16823372/forcing-machine-to-use-dedicated-graphics-card
 extern "C" {
 	_declspec(dllexport) DWORD NvOptimusEnablement = 0x00000001;
@@ -24,9 +25,9 @@ int main(int args, char** argv)
 			std::cout << line_readed << '\n';
 		}
 		introduction.close();
-		fprintf(stdout, "Escribe el nombre de tu HEROE para continuar: ");
-		std::cin >> hero_name;
-		App* app = new App(hero_name);
+		//fprintf(stdout, "Escribe el nombre de tu HEROE para continuar: ");
+		//std::cin >> hero_name;
+		App* app = new App("");
 		return app->run();
 	}
 	return 0;

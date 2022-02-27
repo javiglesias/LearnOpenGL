@@ -36,7 +36,7 @@ public:
 private:
 	unsigned int VBO = -1, VBO_Circle = -1;
 	unsigned int VAO = -1, VAO_Circle = -1;
-	unsigned int m_radius = 0.1f;
+	float m_radius = 0.1f;
 	glm::vec2 m_position{ 0,0 };
 	glm::vec2 m_center{ 0,0 };
 	glm::vec2 m_translate{ 0,0 };
@@ -48,6 +48,7 @@ private:
 	glm::mat4 m_model = glm::mat4(1.0f);
 	unsigned int model_id = -1;
 	unsigned int base_color_id = -1;
+	unsigned int alive_id = -1;
 	AIComponent* m_brain;
 	Shader* shader;
 	SoundComponent* m_ears;

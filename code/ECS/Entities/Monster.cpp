@@ -1,18 +1,17 @@
 #include "Monster.h"
 
-Monster::Monster(Shader* _shader, glm::vec2 _init_position)
+Monster::Monster(glm::vec2 _init_position)
 {
 	m_brain = new AIComponent();
 	m_ears = new SoundComponent();
 	m_rigidbody = new PhysicsComponent(m_position, m_width, m_height);
-	shader = _shader;
 	glGenBuffers(1, &VBO);
 	glGenBuffers(1, &VBO_Circle);
 	glGenVertexArrays(1, &VAO);
 	glGenVertexArrays(1, &VAO_Circle);
 	glBindVertexArray(VAO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(shape), shape, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(m_shape), m_shape, GL_STATIC_DRAW);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float),
 		(void*)0);
 	glEnableVertexAttribArray(0);
@@ -38,20 +37,20 @@ void Monster::Draw()
 
 }
 
-void Monster::DrawEffectArea()
-{
-	glBindVertexArray(VAO_Circle);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO_Circle);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(circle_points), circle_points, GL_STATIC_DRAW);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float),
-		(void*)0);
-	glEnableVertexAttribArray(0);
-	glUniform4f(base_color_id, 1, 1, 1, 1);
-	glUniformMatrix4fv(model_id, 1, GL_FALSE, glm::value_ptr(m_model));
-	shader->use();
-	glDrawArrays(GL_LINE_LOOP, 0, 4);
-	shader->unuse();
-}
+//void Monster::DrawEffectArea()
+//{
+//	glBindVertexArray(VAO_Circle);
+//	glBindBuffer(GL_ARRAY_BUFFER, VBO_Circle);
+//	glBufferData(GL_ARRAY_BUFFER, sizeof(circle_points), circle_points, GL_STATIC_DRAW);
+//	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float),
+//		(void*)0);
+//	glEnableVertexAttribArray(0);
+//	glUniform4f(base_color_id, 1, 1, 1, 1);
+//	glUniformMatrix4fv(model_id, 1, GL_FALSE, glm::value_ptr(m_model));
+//	shader->use();
+//	glDrawArrays(GL_LINE_LOOP, 0, 4);
+//	shader->unuse();
+//}
 
 void Monster::Move(glm::vec2 _scrolling)
 {

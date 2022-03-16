@@ -1,7 +1,7 @@
 #include "Room.h"
 
 
-Room::Room(glm::vec2 _init_position, float _width, float _height, Shader* _shader, Color _color)
+Room::Room(glm::vec2 _init_position, float _width, float _height)
 {
 	m_position = _init_position;
 	m_shape_size = Shape_Size(_width, _height);
@@ -14,7 +14,6 @@ Room::Room(glm::vec2 _init_position, float _width, float _height, Shader* _shade
 	m_shape[13] = _height;
 	m_shape[16] = _height;
 
-	m_shader = _shader;
 	glGenBuffers(1, &VBO);
 	glGenVertexArrays(1, &VAO);
 	glBindVertexArray(VAO);
@@ -25,8 +24,7 @@ Room::Room(glm::vec2 _init_position, float _width, float _height, Shader* _shade
 	glEnableVertexAttribArray(0);
 	model_id = glGetUniformLocation(m_shader->id, "model");
 	base_color_id = glGetUniformLocation(m_shader->id, "base_color");
-	//	Posicion de inicio donde va a empezar el enemigo
-	m_shader_base_color = _color;
+
 	m_model = glm::translate(m_model, glm::vec3(m_position.x, m_position.y, 0));
 	m_position.x = _init_position.x + _width / 2;
 	m_position.y = _init_position.y + _height / 2;

@@ -1,12 +1,11 @@
 #include "NPC.h"
 
-NPC::NPC(Shader* _shader, glm::vec2 _init_position, float _width, float _height)
+NPC::NPC(glm::vec2 _init_position, float _width, float _height)
 {
 	m_position = _init_position;
 	m_shape_size = Shape_Size(_width, _height);
 	m_position.x = m_position.x - m_shape_size.w;
 	m_position.y = m_position.y - m_shape_size.h;
-	shader = _shader;
 	m_ears = new SoundComponent();
 	m_ears->PlaySFX(m_ears->WALK);
 	glGenBuffers(1, &VBO);
@@ -71,7 +70,7 @@ void NPC::UpdateSounds()
 
 glm::vec2 NPC::GetPosition()
 {
-	return glm::vec2();
+	return m_position;
 }
 
 glm::vec2 NPC::GetNextPosition()

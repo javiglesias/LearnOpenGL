@@ -189,6 +189,8 @@
     <ClCompile Include="code\ECS\Entities\Door.cpp" />
     <ClCompile Include="code\ECS\Entities\Projectile.cpp" />
     <ClCompile Include="code\ECS\Entities\NPC.cpp" />
+    <ClCompile Include="code\Render\Renderer.cpp" />
+    <ClCompile Include="code\ECS\Entities\Spawner.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="code\Action\Action.h" />
@@ -224,6 +226,8 @@
     <ClInclude Include="code\ECS\Entities\Door.h" />
     <ClInclude Include="code\ECS\Entities\Projectile.h" />
     <ClInclude Include="code\ECS\Entities\NPC.h" />
+    <ClInclude Include="code\Render\Renderer.h" />
+    <ClInclude Include="code\ECS\Entities\Spawner.h" />
   </ItemGroup>
   <ItemGroup>
     <Font Include="resources\AncientModernTales-a7Po.ttf" />

@@ -131,28 +131,29 @@ void App::process_input(GLFWwindow* m_window)
 	{
 		m_sound_system->VolumeIncrement(-0.1f);
 	}
+	if(glfwGetKey(m_window, GLFW_KEY_0) == GLFW_PRESS)
+	{
+		is_step_by_step = true;
+	}
+	if (glfwGetKey(m_window, GLFW_KEY_1) == GLFW_PRESS)
+	{
+		is_advancing_frame = true;
+	}
+	if (glfwGetKey(m_window, GLFW_KEY_1) == GLFW_RELEASE && is_advancing_frame)
+	{	
+		advance_step = true;
+		is_advancing_frame = false;
+	}
 }
 void App::refresh_level()
 {
 	m_current_level++;
-	this->m_refresh = true;
-	m_rooms.clear();
-	m_props_world.clear();
-	m_corridors.clear();
-#if !MAP_GENERATION
-	fprintf(stdout, "\nNivel de cerveza: %d\n", m_current_level);
-	m_dynamic_world.clear();
-	m_npcs.clear();
-	m_enemies.clear();
-	m_sound_system->StopAll();
-	m_sound_system->PlaySFX("open_door.wav");
-#endif
-
+	m_refresh = true;
 }
 
 bool App::enemies_left()
 {
-	for (i = 0; i < m_enemies.size(); ++i)
+	for (i = 0; i < 10; ++i)
 	{
 		if(m_enemies[i]->m_show == true)
 			return true;
@@ -163,45 +164,15 @@ bool App::enemies_left()
 
 void App::generate_map_rooms(int _value)
 {
-	/* Generacion procedimental de la mazmorra 
-	 Cada 2 habitaciones hay que conectarlas por un pasillo*/
-	Room* last_room = m_rooms.size() > 0 ? m_rooms[m_rooms.size() - 1] : nullptr;
-	int rooms_to_generate = _value + 1; // el numero de salas es incremental en cada piso
-	float room_width = 0.2f, room_height = 0.2f;
-	float x_pos = -1.f;
-	float y_pos = -1.f;
-	if(last_room)
+	/*Generacion procedimental de la mazmorra 
+	Cada 2 habitaciones hay que conectarlas por un pasillo*/
+	//	TODO utilizar flyweigth patron para pintar los objetos.
+	//	El numero de salas es incremental en cada piso
+	//rooms_to_generate <<= rooms_to_generate;
+	//	Por cada habitacion, generamos 2, una a cada lado.
+	for (int j = 0; j < _value; j++)
 	{
-		room_width = last_room->GetSize().w;
-		room_height = last_room->GetSize().h;
-		x_pos = last_room->GetPosition().x;
-		y_pos = last_room->GetPosition().y;
-	}
-	Room* room = nullptr;
-	glm::vec2 init_position
-	{
-		x_pos+room_width,
-		y_pos+2*room_height
-	};
-	rooms_to_generate <<= rooms_to_generate; // por cada habitacion, generamos 2, una a cada lado.
-	for (int j = 0; j < rooms_to_generate; j++)
-	{
-		int room_rng = rand() % 100;
-		if(room_rng > 50 || room_rng > 75)
-		{
-			init_position = glm::vec2(1.2 * j * room_width,init_position.y);
-			room = new Room(init_position, room_width, room_height,
-				new Shader("code\\shaders\\instance.vert",
-					"code\\shaders\\instance.frag", "Room"));
-			m_rooms.push_back(room);
-		} else if(room_rng < 50 || room_rng < 75)
-		{
-			init_position = glm::vec2(-1.2 * j * room_width,init_position.y);
-			room = new Room(init_position, room_width, room_height,
-				new Shader("code\\shaders\\instance.vert",
-					"code\\shaders\\instance.frag", "Room"));
-			m_rooms.push_back(room);
-		}
+		m_rooms[j] = new Room(glm::vec2(j-1, j/2 - 0.5f));
 	}
 }
 
@@ -209,9 +180,6 @@ App::~App()
 {
 	free(m_sound_system);
 	free(m_hero_char);
-	m_dynamic_world.clear();
-	m_rooms.clear();
-	m_npcs.clear();
 }
 int App::run()
 {
@@ -247,39 +215,39 @@ int App::run()
 	m_physics_system = new PhysicsSystem();
 	
 refresh:
-#if !MAP_GENERATION
-	m_sound_system->PlayMusic("Reflections.wav", m_current_level/1.f);
-	m_dynamic_world.clear();
+	//m_sound_system->PlayMusic("Reflections.wav", m_current_level/1.f);
 	//	 Generate 4 monsters at a time
-	float x_pos = ((rand() % SCREEN_WIDTH) / 1010.0);
-	float y_pos = ((rand() % SCREEN_HEIGHT) / 1010.0);
-	for (i = 0; i < 10; i++)
+	for (i = 0; i < MAX_ENTITIES; i++)
 	{
-		m_enemies.push_back( new Monster(new Shader("code\\shaders\\basic.vert", "code\\shaders\\basic.frag", "MOSTRO"),
-			glm::vec2(x_pos, y_pos)));
-	}
-#endif
+		float x_pos = -((rand() % SCREEN_WIDTH) / 500.0);
+		float y_pos = ((rand() % SCREEN_HEIGHT) / 500.0);
+		int j = i;
+		m_enemies[i] = new Monster(glm::vec2(x_pos, y_pos));
+		++i;
+		m_enemies[i] = new Monster(glm::vec2(-x_pos, y_pos));
+		++i;
+		m_enemies[i] = new Monster(glm::vec2(x_pos, -y_pos));
+		++i;
+		m_enemies[i] = new Monster(glm::vec2(-x_pos, -y_pos));
 
-#if 1
+		x_pos = ((rand() % SCREEN_WIDTH) / 500.0);
+		y_pos = -((rand() % SCREEN_HEIGHT) / 500.0);
+		i = j;
+		m_npcs[i] = new NPC(glm::vec2(x_pos, y_pos));
+		++i;
+		m_npcs[i] = new NPC(glm::vec2(-x_pos, y_pos));
+		++i;
+		m_npcs[i] = new NPC(glm::vec2(x_pos, -y_pos));
+		++i;
+		m_npcs[i] = new NPC(glm::vec2(-x_pos, -y_pos));
+	}
+
 	begin_map_generation = clock();
-	generate_map_rooms(0);
-	generate_map_rooms(1);
 	generate_map_rooms(2);
 	end_map_generation = clock();
 	fprintf(stdout, "Map generation elapsed time: %ld\n", end_map_generation - begin_map_generation);
-#else
-	Room* first_room = nullptr;
-	first_room = new Room(glm::vec2(-1.f, -1.f),
-		0.1f, 0.1f,
-		new Shader("code\\shaders\\basic_water.vert", "code\\shaders\\basic_water.frag", "Room"));
-	m_rooms.push_back(first_room);
-#endif
 	//	Colocamos al jugador en la primera habitacion
-	m_hero_char = new Hero(new Shader("code\\shaders\\basic.vert", "code\\shaders\\basic.frag", "HERO"), 
-	m_rooms.at(0)->GetPosition(),
-		.02f, .04f);
-	/*m_npcs.push_back(new NPC(new Shader("code\\shaders\\instance.vert", "code\\shaders\\instance.frag", "NPC"), 
-		m_rooms.at(rand() % m_rooms.size())->GetPosition()));*/
+	m_hero_char = new Hero(glm::vec2(0,0));
 #if 0
 	return 0;
 #endif
@@ -297,80 +265,71 @@ refresh:
 		m_accumulated_time_ia += m_delta_time;
 		if (m_accumulated_time >= m_frame_cap) // Render frame
 		{
-			glClearColor(85.f / 255.f, 170.f / 255.f, 85.f / 255.f, 1.f);
-			glClear(GL_COLOR_BUFFER_BIT);
 			process_input(m_window);
-			m_accumulated_time = 0.f;
-			//	Lo primero en dibujar, el fondo
-			for (i=0; i < m_props_world.size(); ++i)
+			if (!is_step_by_step || advance_step)
 			{
-				
-				m_props_world[i]->Draw();
-			}
-			for (i = 0; i < m_rooms.size(); ++i)
-			{
-				m_rooms[i]->Draw();
-			}
-			for (i=0; i < m_corridors.size(); ++i)
-			{
-				m_corridors[i]->Draw();
-			}
-#if !MAP_GENERATION
-			for (i = 0; i < m_enemies.size(); ++i)
-			{
-				m_enemies[i]->Draw();
-			}
-			for(i = 0; i < m_npcs.size(); ++i)
-			{
-				m_npcs[i]->Draw();
-			}
-#endif
-			m_hero_char->Draw();
+				glClearColor(85.f / 255.f, 170.f / 255.f, 85.f / 255.f, 1.f);
+				glClear(GL_COLOR_BUFFER_BIT);
+				m_accumulated_time = 0.f;
 
-			glfwSwapBuffers(m_window);
+				for (i = 0; i < 1; ++i)
+				{
+					m_rooms[i]->Draw();
+				}
+				//	DRAW ENTITIES
+				for (i = 0; i < MAX_ENTITIES; ++i)
+				{
+					if(m_enemies[i]->GetPosition().x < 1.f && 
+						m_enemies[i]->GetPosition().y < 1.f &&
+						m_enemies[i]->GetPosition().x > -1.f &&
+						m_enemies[i]->GetPosition().y > -1.f)
+					{
+						m_enemies[i]->Draw();
+					}
+
+					if (m_npcs[i]->GetPosition().x < 1.f &&
+						m_npcs[i]->GetPosition().y < 1.f &&
+						m_npcs[i]->GetPosition().x > -1.f &&
+						m_npcs[i]->GetPosition().y > -1.f)
+					{
+						m_npcs[i]->Draw();
+					}
+				}
+
+				m_hero_char->Draw();
+
+				glfwSwapBuffers(m_window);
+				m_frame_number++;
+				//fprintf(stdout, "\rFrame: %d", m_frame_number);
+				if(advance_step && is_step_by_step)
+					advance_step = false;
+			}
 			glfwPollEvents();
-			m_frame_number++;
 		}
 		if (m_accumulated_time_physics >= m_frame_cap_physics) // Physics frame
 		{
 			m_accumulated_time_physics = 0.f;
-			register int i = 0;
-#if !MAP_GENERATION
-			m_physics_system->UpdateStaticWorld(m_rooms);
-			for (i = 0; i < m_npcs.size(); ++i)
+			if (!is_step_by_step || advance_step)
 			{
-				void (*callback)() = &refresh;
-				if(m_npcs[i]->UpdatePhysics(m_hero_char, m_hero_char->GetInteracting(), callback) && !enemies_left())
+				//m_physics_system->UpdateStaticWorld(m_rooms);
+				for (i = 0; i < MAX_ENTITIES; ++i)
 				{
-					refresh_level();
-				}
-				m_npcs[i]->Move(m_scrolling);
-			}
-			for (i = 0; i < m_enemies.size(); ++i)
-			{
-				if(m_enemies[i]->UpdatePhysics(m_hero_char))
-				{
-					continue;
-				}
-				else
-				{
+					/*void (*callback)() = &refresh;
+					if(m_npcs[i]->UpdatePhysics(m_hero_char, m_hero_char->GetInteracting(), callback) && !enemies_left())
+					{
+						refresh_level();
+					}*/
+					m_npcs[i]->Move(m_scrolling);
 					m_enemies[i]->Move(m_scrolling);
 				}
+				/*for (i = 0; i < 1; ++i)
+				{
+					m_rooms[i]->Move(m_scrolling);
+				}*/
+				m_scrolling = glm::vec2(0.f);
+				if (advance_step && is_step_by_step)
+					advance_step = false;
 			}
-#endif
-			for (i = 0; i < m_props_world.size(); ++i)
-			{
-				m_props_world[i]->Move(m_scrolling);
-			}
-			for (i = 0; i < m_rooms.size(); ++i)
-			{
-				m_rooms[i]->Move(m_scrolling);
-			}
-			for (i = 0; i < m_corridors.size(); ++i)
-			{
-				m_corridors[i]->Move(m_scrolling);
-			}
-			m_scrolling = glm::vec2(0.f);
 		}
 		if (m_accumulated_time_ia >= m_frame_cap_ia) // IA and Sound frame
 		{

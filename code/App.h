@@ -6,7 +6,7 @@
 #include "GLFW/glfw3.h"
 #include "glm.hpp"
 #include <string>
-#include <vector>
+#include "common.h"
 #include <time.h>
 #include "ECS/Entities/Entity.h"
 #include "ECS/Entities/Corridor.h"
@@ -23,9 +23,10 @@
 //	TODO	Generacion de laberinto
 //	TODO	Online
 
-#define FRAMECAP60 0.01666666666666667f
-#define FRAMECAP30 0.03333333333333333f
-#define FRAMECAP24 0.04166666666666667f
+#define FRAMECAP120		0.00833333333333333f
+#define FRAMECAP60		0.01666666666666667f
+#define FRAMECAP30		0.03333333333333333f
+#define FRAMECAP24		0.04166666666666667f
 #define SCREEN_WIDTH 640
 #define SCREEN_HEIGHT 640
 #define MOVE_UP glm::vec2(0, .009f)
@@ -39,17 +40,17 @@ class App
 {
 private:
 	bool should_close = false, m_refresh = false;
+	bool is_step_by_step = false;
+	bool is_advancing_frame = false;
+	bool advance_step = false;
 	GLFWwindow* m_window = nullptr;
 	register int i = 0;
 
-	Hero* m_hero_char;						//	Heroe
-	std::vector<Monster*> m_enemies{};		//	Enemigos del heroe
-	std::vector<NPC*> m_npcs{};	//	Colisiones estaticas
-	std::vector<Entity*> m_props_world{};	//	Colisiones estaticas
-	std::vector<Entity*> m_dynamic_world{};	//	Objetos que se mueven
-	std::vector<Room*> m_rooms{};	//	Colisiones estaticas
-	std::vector<Corridor*> m_corridors{};	//	Colisiones estaticas
-
+	Room* m_rooms[10];
+	Hero* m_hero_char;		//	Heroe
+	Monster* m_enemies[MAX_ENTITIES];	//	Enemigos del heroe
+	NPC* m_npcs[MAX_ENTITIES];	//	Colisiones estaticas
+	
 	SoundSystem* m_sound_system;			//	Sonido
 	NetworkSystem* m_network_system;		//	Red
 	PhysicsSystem* m_physics_system;		//	Fisicas/colisiones
@@ -95,7 +96,7 @@ public:
 	float m_accumulated_time = 0.f;
 	float m_accumulated_time_physics = 0.f;
 	float m_accumulated_time_ia = 0.f;
-	float m_frame_cap = FRAMECAP60;
+	float m_frame_cap = FRAMECAP120;
 	float m_frame_cap_physics = FRAMECAP30;
 	float m_frame_cap_ia = FRAMECAP24;
 	unsigned int m_frame_number = 0;

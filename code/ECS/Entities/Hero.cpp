@@ -1,8 +1,7 @@
 #include "Hero.h"
 
-Hero::Hero(Shader* _shader, glm::vec2 _init_position, float _width, float _height)
+Hero::Hero(glm::vec2 _init_position, float _width, float _height)
 {
-	shader = _shader;
 	m_shape_size = Shape_Size(_width, _height);
 	//	Width
 	shape[3] = -_width;

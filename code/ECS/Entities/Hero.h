@@ -6,7 +6,7 @@ class Hero :
 
 public:
     Hero(){}
-    Hero(Shader* _shader, glm::vec2 _position = glm::vec2(0,0),
+    Hero(glm::vec2 _position = glm::vec2(0,0),
 		float _width = .04f, float _height = .02f);
 	void Draw() override;
 	float shape[15] = {
@@ -43,7 +43,7 @@ private:
 	float m_width = 0.02f;
 	float m_height = 0.05f;
 	std::string m_hero_name;
-	Shader* shader;
+	Shader* shader = new Shader("code\\shaders\\basic.vert", "code\\shaders\\basic.frag", "HERO");
 	Shape_Size m_shape_size;
 	PhysicsComponent* m_rigidbody{};
 	SoundComponent* m_ears;

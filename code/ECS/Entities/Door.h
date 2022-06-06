@@ -3,7 +3,7 @@
 class Door : public Entity
 {
 public:
-	Door(){}
+	Door(){ Entity::m_name = "dummyDoor"; }
 	Door(Shader* _shader, glm::vec2 _init_position, float _width=0.05f, float _heigth = 0.05f);
 	void Draw() override;
 	void Move(glm::vec2 _scroling) override;
@@ -16,7 +16,6 @@ private:
 		-0.05f,  0.05f, 0.0f,
 		 0.05f,  0.05f, 0.0f
 	};
-	glm::vec2 m_position;
 	glm::vec2 m_translate;
 	unsigned int VBO = -1;
 	unsigned int VAO = -1;

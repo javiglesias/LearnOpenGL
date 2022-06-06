@@ -2,10 +2,10 @@
 
 NPC::NPC(glm::vec2 _init_position, float _width, float _height)
 {
-	m_position = _init_position;
-	m_shape_size = Shape_Size(_width, _height);
-	m_position.x = m_position.x - m_shape_size.w;
-	m_position.y = m_position.y - m_shape_size.h;
+	Entity::m_position = _init_position;
+	m_shape_size = new Shape_Size(_width, _height);
+	Entity::m_position.x = Entity::m_position.x - m_shape_size->w;
+	Entity::m_position.y = Entity::m_position.y - m_shape_size->h;
 	m_ears = new SoundComponent();
 	m_ears->PlaySFX(m_ears->WALK);
 	glGenBuffers(1, &VBO);
@@ -18,8 +18,16 @@ NPC::NPC(glm::vec2 _init_position, float _width, float _height)
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float),
 		(void*)0);
 	glEnableVertexAttribArray(0);
-	m_rigidbody = new PhysicsComponent(m_position, 0.02f, 0.05f);
-	m_model = glm::translate(m_model, glm::vec3(m_position.x, m_position.y, 0.0f));
+	m_rigidbody = new PhysicsComponent(Entity::m_position, 0.02f, 0.05f);
+	m_model = glm::translate(m_model, glm::vec3(Entity::m_position.x, Entity::m_position.y, 0.0f));
+}
+
+NPC::~NPC()
+{
+	delete m_ears;
+	delete m_rigidbody;
+	delete shader;
+	delete m_shape_size;
 }
 
 void NPC::Draw()
@@ -33,7 +41,7 @@ void NPC::Draw()
 }
 void NPC::Move(glm::vec2 _scrolling)
 {
-	m_position	-= _scrolling;
+	Entity::m_position	-= _scrolling;
 	m_translate -= _scrolling;
 	m_model = glm::translate(m_model, glm::vec3(m_translate.x,
 		m_translate.y, 0.0f));
@@ -46,10 +54,10 @@ void NPC::UpdatePhysics()
 
 bool NPC::UpdatePhysics(Entity* _target, bool _interacting, void (*_callback) ())
 {
-	if (_target->GetPosition().x < (m_position.x + m_shape_size.w) &&
-		_target->GetPosition().x >= m_position.x &&
-		_target->GetPosition().y < (m_position.y + m_shape_size.h) &&
-		_target->GetPosition().y >= m_position.y)
+	if (_target->GetPosition().x < (Entity::m_position.x + m_shape_size->w) &&
+		_target->GetPosition().x >= Entity::m_position.x &&
+		_target->GetPosition().y < (Entity::m_position.y + m_shape_size->h) &&
+		_target->GetPosition().y >= Entity::m_position.y)
 	{
 		// llamada de callback cuando ha hablado con el NPC
 		(*_callback)();
@@ -57,9 +65,9 @@ bool NPC::UpdatePhysics(Entity* _target, bool _interacting, void (*_callback) ()
 	}
 	if(_interacting)
 	{
-		fprintf(stdout, "NPC: (%.3f,%.3f)\n", m_position.x, m_position.y);
-		fprintf(stdout, "NPC: (%.3fx%.3f)\n", m_position.x + m_shape_size.w,
-			m_position.y + m_shape_size.h);
+		fprintf(stdout, "NPC: (%.3f,%.3f)\n", Entity::m_position.x, Entity::m_position.y);
+		fprintf(stdout, "NPC: (%.3fx%.3f)\n", Entity::m_position.x + m_shape_size->w,
+			Entity::m_position.y + m_shape_size->h);
 	}
 	return false;
 }
@@ -70,7 +78,11 @@ void NPC::UpdateSounds()
 
 glm::vec2 NPC::GetPosition()
 {
-	return m_position;
+	return Entity::m_position;
+}
+void NPC::SetPosition(glm::vec2 _newPosition)
+{
+	Entity::m_position = _newPosition;
 }
 
 glm::vec2 NPC::GetNextPosition()

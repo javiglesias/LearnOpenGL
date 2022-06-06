@@ -3,7 +3,7 @@
 
 Room::Room(glm::vec2 _init_position, float _width, float _height)
 {
-	m_position = _init_position;
+	Entity::m_position = _init_position;
 	m_shape_size = Shape_Size(_width, _height);
 	// witdth
 	m_shape[6] = _width;
@@ -25,9 +25,9 @@ Room::Room(glm::vec2 _init_position, float _width, float _height)
 	model_id = glGetUniformLocation(m_shader->id, "model");
 	base_color_id = glGetUniformLocation(m_shader->id, "base_color");
 
-	m_model = glm::translate(m_model, glm::vec3(m_position.x, m_position.y, 0));
-	m_position.x = _init_position.x + _width / 2;
-	m_position.y = _init_position.y + _height / 2;
+	m_model = glm::translate(m_model, glm::vec3(Entity::m_position.x, Entity::m_position.y, 0));
+	Entity::m_position.x = _init_position.x + _width / 2;
+	Entity::m_position.y = _init_position.y + _height / 2;
 }
 
 PhysicsComponent* Room::GetPhysicsComponent()
@@ -47,7 +47,7 @@ void Room::Draw()
 void Room::Move(glm::vec2 _scrolling)
 {
 	m_movement -= _scrolling;
-	m_position -= _scrolling;
+	Entity::m_position -= _scrolling;
 	m_model = glm::translate(m_model, glm::vec3(m_movement.x, m_movement.y, 0));
 	m_movement = glm::vec2(0.f);
 }
@@ -66,10 +66,10 @@ void Room::UpdatePhysics()
 
 bool Room::UpdatePhysics(Entity* _target)
 {
-	if (_target->GetPosition().x < (m_position.x + m_shape_size.w) &&
-		_target->GetPosition().x >= m_position.x &&
-		_target->GetPosition().y < (m_position.y + m_shape_size.h) &&
-		_target->GetPosition().y >= m_position.y)
+	if (_target->GetPosition().x < (Entity::m_position.x + m_shape_size.w) &&
+		_target->GetPosition().x >= Entity::m_position.x &&
+		_target->GetPosition().y < (Entity::m_position.y + m_shape_size.h) &&
+		_target->GetPosition().y >= Entity::m_position.y)
 	{
 		fprintf(stdout, "wall collide");
 		return true;
@@ -79,17 +79,17 @@ bool Room::UpdatePhysics(Entity* _target)
 
 glm::vec2 Room::GetPosition()
 {
-	return m_position;
+	return Entity::m_position;
 }
 
 void Room::UpdateIA()
 {
 	/*float increment = 0.0001f;
-	if (m_position.x >= .9f)
+	if (Entity::m_position.x >= .9f)
 	{
 		increment = -sin(rand() % 2 / 10.f);
 	}
-	else if (m_position.x <= -.9f)
+	else if (Entity::m_position.x <= -.9f)
 	{
 		increment = sin(rand() % 2 / 10.f);
 	}

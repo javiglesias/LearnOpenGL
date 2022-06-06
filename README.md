@@ -2,6 +2,7 @@
 
 ## TODOs
 
+**TODO:** Persistencia del mundo JSON & reflexion.
 **TODO:** Ajustar colisiones, estan un poco off (Puede que por el scrolling).
 **TODO:** VFX
 

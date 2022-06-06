@@ -8,6 +8,7 @@
 #include <string>
 #include "common.h"
 #include <time.h>
+#include "Persistence\PersistenceUtils.h"
 #include "ECS/Entities/Entity.h"
 #include "ECS/Entities/Corridor.h"
 #include "ECS/Entities/Hero.h"
@@ -17,6 +18,7 @@
 #include "ECS/Systems/NetworkSystem.h"
 #include "ECS/Systems/AISystem.h"
 #include "ECS/Systems/PhysicsSystem.h"
+#include "ScriptManager\CScriptManager.h"
 
 //	TODO	IA
 //	TODO	Colisiones
@@ -44,9 +46,9 @@ private:
 	bool is_advancing_frame = false;
 	bool advance_step = false;
 	GLFWwindow* m_window = nullptr;
-	register int i = 0;
+	int i = 0;
 
-	Room* m_rooms[10];
+	//Room* m_rooms[10];
 	Hero* m_hero_char;		//	Heroe
 	Monster* m_enemies[MAX_ENTITIES];	//	Enemigos del heroe
 	NPC* m_npcs[MAX_ENTITIES];	//	Colisiones estaticas
@@ -57,7 +59,7 @@ private:
 	void process_input(GLFWwindow* m_window);
 	void refresh_level();
 	bool enemies_left();
-	void generate_map_rooms(int _value);
+	//void generate_map_rooms(int _value);
 	std::string m_hero_name;
 	bool m_is_restarting = false;
 	bool m_joystick_detected = false;
@@ -85,6 +87,8 @@ private:
 		Entity::Color(0.f, 170.f / 255.f, 0.f),
 		Entity::Color(41.f / 255.f, 134.f / 255.f,  204.f / 255.f)
 	};
+	CScriptManager* m_script_manager = new CScriptManager();
+	PersistenceUtils* m_persist_manager = new PersistenceUtils();
 public:
 	App(std::string _hero_name) { m_hero_name = _hero_name;}
 	~App();

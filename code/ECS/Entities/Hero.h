@@ -5,7 +5,8 @@ class Hero :
 {
 
 public:
-    Hero(){}
+    Hero(){ Entity::m_name = "dummyHero"; isHero = true;}
+	~Hero();
     Hero(glm::vec2 _position = glm::vec2(0,0),
 		float _width = .04f, float _height = .02f);
 	void Draw() override;
@@ -23,7 +24,7 @@ public:
 	glm::vec2 GetNextPosition() override;
 	Shape_Size GetSize() override
 	{
-		return m_shape_size;
+		return *m_shape_size;
 	}
 	void SetNextPosition(glm::vec2);
 	PhysicsComponent* GetPhysicsComponent() override { return m_rigidbody; };
@@ -36,7 +37,6 @@ private:
 	unsigned int VAO = -1;
 	bool m_interacting = false;
 	glm::mat4 m_model = glm::mat4(1.0f);
-	glm::vec2 m_position{0.f};
 	glm::vec2 m_next_position{0.f};
 	glm::vec2 m_center {0.f};
 	glm::vec2 m_translate{0.f};
@@ -44,7 +44,8 @@ private:
 	float m_height = 0.05f;
 	std::string m_hero_name;
 	Shader* shader = new Shader("code\\shaders\\basic.vert", "code\\shaders\\basic.frag", "HERO");
-	Shape_Size m_shape_size;
+	Shape_Size* m_shape_size;
 	PhysicsComponent* m_rigidbody{};
 	SoundComponent* m_ears;
+protected:
 };

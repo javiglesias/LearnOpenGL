@@ -2,7 +2,6 @@
 #include <cstdio>
 #include <wtypes.h>
 #include "common.h"
-#include "ECS/Entities/Room.h"
 void refresh()
 {
 	//fprintf(stdout, "\nCallback de hablar con el NPC.\n");
@@ -103,6 +102,7 @@ void App::process_input(GLFWwindow* m_window)
 		m_gamepad_A == GLFW_PRESS)
 	{
 		m_hero_char->Interact(true);
+		m_persist_manager->SaveObject(*m_hero_char);
 	}
 	if (glfwGetKey(m_window, GLFW_KEY_E) == GLFW_RELEASE)
 	{
@@ -148,6 +148,9 @@ void App::process_input(GLFWwindow* m_window)
 void App::refresh_level()
 {
 	m_current_level++;
+	delete m_brain;
+	delete m_network_system;
+	delete m_physics_system;
 	m_refresh = true;
 }
 
@@ -162,19 +165,19 @@ bool App::enemies_left()
 	return false;
 }
 
-void App::generate_map_rooms(int _value)
-{
-	/*Generacion procedimental de la mazmorra 
-	Cada 2 habitaciones hay que conectarlas por un pasillo*/
-	//	TODO utilizar flyweigth patron para pintar los objetos.
-	//	El numero de salas es incremental en cada piso
-	//rooms_to_generate <<= rooms_to_generate;
-	//	Por cada habitacion, generamos 2, una a cada lado.
-	for (int j = 0; j < _value; j++)
-	{
-		m_rooms[j] = new Room(glm::vec2(j-1, j/2 - 0.5f));
-	}
-}
+//void App::generate_map_rooms(int _value)
+//{
+//	/*Generacion procedimental de la mazmorra 
+//	Cada 2 habitaciones hay que conectarlas por un pasillo*/
+//	//	TODO utilizar flyweigth patron para pintar los objetos.
+//	//	El numero de salas es incremental en cada piso
+//	//rooms_to_generate <<= rooms_to_generate;
+//	//	Por cada habitacion, generamos 2, una a cada lado.
+//	for (int j = 0; j < _value; j++)
+//	{
+//		m_rooms[j] = new Room(glm::vec2(j-1, j/2 - 0.5f));
+//	}
+//}
 
 App::~App()
 {
@@ -183,6 +186,7 @@ App::~App()
 }
 int App::run()
 {
+	m_script_manager->executeScript("resources/Scripts/init.lua");
 	srand(NULL);
 	fprintf(stdout,"Seed: %d", rand());
 	glfwInit();
@@ -207,14 +211,8 @@ int App::run()
 		return -1;
 	}
 	glViewport(-1, -1, SCREEN_WIDTH, SCREEN_HEIGHT);
-	//	Sound System init
-	m_network_system = new NetworkSystem();
 	glfwSetFramebufferSizeCallback(m_window, framebuffer_size_callback);
-	m_sound_system = new SoundSystem();
-	m_brain = new AISystem();
-	m_physics_system = new PhysicsSystem();
 	
-refresh:
 	//m_sound_system->PlayMusic("Reflections.wav", m_current_level/1.f);
 	//	 Generate 4 monsters at a time
 	for (i = 0; i < MAX_ENTITIES; i++)
@@ -242,15 +240,40 @@ refresh:
 		m_npcs[i] = new NPC(glm::vec2(-x_pos, -y_pos));
 	}
 
-	begin_map_generation = clock();
-	generate_map_rooms(2);
-	end_map_generation = clock();
-	fprintf(stdout, "Map generation elapsed time: %ld\n", end_map_generation - begin_map_generation);
+	//begin_map_generation = clock();
+	////generate_map_rooms(2);
+	//end_map_generation = clock();
+	//fprintf(stdout, "Map generation elapsed time: %ld\n", end_map_generation - begin_map_generation);
 	//	Colocamos al jugador en la primera habitacion
 	m_hero_char = new Hero(glm::vec2(0,0));
-#if 0
-	return 0;
-#endif
+	m_sound_system = new SoundSystem();
+refresh:
+	m_network_system = new NetworkSystem();
+	m_brain = new AISystem();
+	m_physics_system = new PhysicsSystem();
+	for (i = 0; i < MAX_ENTITIES; i++)
+	{
+		float x_pos = -((rand() % SCREEN_WIDTH) / 500.0);
+		float y_pos = ((rand() % SCREEN_HEIGHT) / 500.0);
+		int j = i;
+		m_enemies[i]->SetPosition(glm::vec2(x_pos, y_pos));
+		++i;
+		m_enemies[i]->SetPosition(glm::vec2(-x_pos, y_pos));
+		++i;
+		m_enemies[i]->SetPosition(glm::vec2(x_pos, -y_pos));
+		++i;
+		m_enemies[i]->SetPosition(glm::vec2(-x_pos, -y_pos));
+		x_pos = ((rand() % SCREEN_WIDTH) / 500.0);
+		y_pos = -((rand() % SCREEN_HEIGHT) / 500.0);
+		i = j;
+		m_npcs[i]->SetPosition(glm::vec2(x_pos, y_pos));
+		++i;
+		m_npcs[i]->SetPosition(glm::vec2(-x_pos, y_pos));
+		++i;
+		m_npcs[i]->SetPosition(glm::vec2(x_pos, -y_pos));
+		++i;
+		m_npcs[i]->SetPosition(glm::vec2(-x_pos, -y_pos));
+	}
 	while (!glfwWindowShouldClose(m_window)) // Game loop
 	{
 		if (m_refresh)
@@ -271,11 +294,6 @@ refresh:
 				glClearColor(85.f / 255.f, 170.f / 255.f, 85.f / 255.f, 1.f);
 				glClear(GL_COLOR_BUFFER_BIT);
 				m_accumulated_time = 0.f;
-
-				for (i = 0; i < 1; ++i)
-				{
-					m_rooms[i]->Draw();
-				}
 				//	DRAW ENTITIES
 				for (i = 0; i < MAX_ENTITIES; ++i)
 				{

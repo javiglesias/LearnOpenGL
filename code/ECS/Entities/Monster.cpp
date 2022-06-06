@@ -1,10 +1,18 @@
 #include "Monster.h"
 
+Monster::~Monster()
+{
+	delete m_brain;
+	delete m_ears;
+	delete shader;
+	delete m_tex_data;
+}
+
 Monster::Monster(glm::vec2 _init_position)
 {
 	m_brain = new AIComponent();
 	m_ears = new SoundComponent();
-	m_rigidbody = new PhysicsComponent(m_position, m_width, m_height);
+	m_rigidbody = new PhysicsComponent(Entity::m_position, m_width, m_height);
 	glGenBuffers(1, &VBO);
 	glGenBuffers(1, &VBO_Circle);
 	glGenVertexArrays(1, &VAO);
@@ -20,8 +28,8 @@ Monster::Monster(glm::vec2 _init_position)
 	alive_id = glGetUniformLocation(shader->id, "is_alive");
 	//	Posicion de inicio donde va a empezar el enemigo
 	m_model = glm::translate(m_model, glm::vec3(_init_position.x, _init_position.y, 0.0f));
-	m_position = _init_position;
-	m_shape_size = new Shape_Size(0.1f, 0.1f);
+	Entity::m_position = _init_position;
+	Entity::m_shape_size = new Shape_Size(0.1f, 0.1f);
 }
 
 void Monster::Draw()
@@ -54,7 +62,7 @@ void Monster::Draw()
 
 void Monster::Move(glm::vec2 _scrolling)
 {
-	m_position	-= _scrolling;
+	Entity::m_position	-= _scrolling;
 	m_model = glm::translate(m_model, glm::vec3(-_scrolling.x, -_scrolling.y, 0.0f));
 }
 
@@ -62,21 +70,21 @@ void Monster::UpdateIA(Entity* _hero)
 {
 	//	Aqui se hacen todas las actualizaciones de IA necesarias, movimiento, accion a tomar
 	//	Esto se esta ejecutando a 24fps
-	auto distance = glm::distance(_hero->GetPosition(), m_position);
+	auto distance = glm::distance(_hero->GetPosition(), Entity::m_position);
 	if (distance >= m_active_distance)
 	{
-		glm::vec2 movement = -m_brain->Update(_hero->GetPosition(), m_position);
-		m_position = movement;
+		glm::vec2 movement = -m_brain->Update(_hero->GetPosition(), Entity::m_position);
+		Entity::m_position = movement;
 		//m_model = glm::translate(m_model, glm::vec3(movement.x, movement.y, 0.0f));
 	}
 }
 
 bool Monster::UpdatePhysics(Entity* _target)
 {
-	if (_target->GetPosition().x < (m_position.x + m_shape_size->w) &&
-		_target->GetPosition().x >= m_position.x &&
-		_target->GetPosition().y < (m_position.y + m_shape_size->h) &&
-		_target->GetPosition().y >= m_position.y)
+	if (_target->GetPosition().x < (Entity::m_position.x + Entity::m_shape_size->w) &&
+		_target->GetPosition().x >= Entity::m_position.x &&
+		_target->GetPosition().y < (Entity::m_position.y + Entity::m_shape_size->h) &&
+		_target->GetPosition().y >= Entity::m_position.y)
 	{
 		m_show = false;
 		return true;	
@@ -91,5 +99,10 @@ PhysicsComponent* Monster::GetPhysicsComponent()
 
 glm::vec2 Monster::GetPosition()
 {
-	return m_position;
+	return Entity::m_position;
+}
+
+void Monster::SetPosition(glm::vec2 _newPosition)
+{
+	Entity::m_position = _newPosition;
 }

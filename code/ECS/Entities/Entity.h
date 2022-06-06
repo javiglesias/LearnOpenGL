@@ -15,6 +15,7 @@
 class Entity
 {
 public:
+	bool isHero = false;
 	struct Color
 	{
 		float r = 0.f, g = 0.f, b = 0.f, a = 1.f;
@@ -48,7 +49,7 @@ public:
 		GREEN,
 		BLUE
 	};
-	Entity();
+	Entity(){}
 	void virtual Move(){};
 	void virtual Draw(){};
 	void virtual DrawEffectArea(){}
@@ -61,10 +62,23 @@ public:
 	void virtual UpdatePhysics(){}
 	bool virtual UpdatePhysics(Entity* target){return false;}
 	void virtual UpdateSounds(){}
+	std::string virtual GetPersistData() const
+	{
+		std::string json = "";
+		json += "{\n\"" + m_name + "\": {\n"
+			+ "\"m_width\":" + std::to_string(m_width) + ",\n"
+			+ "\"m_height\":" + std::to_string(m_height)  + "\n"
+			+ "}\n}";
+		return json;
+	}
 	PhysicsComponent virtual *GetPhysicsComponent(){return nullptr;}
 	glm::vec2 virtual GetPosition() 
 	{
 		return glm::vec2(0.0f);
+	}
+	void virtual SetPosition(glm::vec2 _newPosition)
+	{
+		m_position = _newPosition;
 	}
 	glm::vec2 virtual GetNextPosition() 
 	{
@@ -72,11 +86,17 @@ public:
 	}
 	Shape_Size virtual GetSize()
 	{
-		return m_size;
+		return *m_shape_size;
 	}
+	std::string GetName() const { return m_name; }
 	bool m_to_delete = false;
 	bool m_show = true;
-private:
-	Shape_Size m_size{0.f, 0.f};
+
+protected:
+	std::string m_name = "dummyEntity";
+	Shape_Size* m_shape_size;
+	glm::vec2 m_position{ 0.f };
+	float m_width = 0.02f;
+	float m_height = 0.05f;
 };
 

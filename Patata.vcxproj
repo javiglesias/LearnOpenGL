@@ -42,13 +42,13 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -74,13 +74,15 @@
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <LinkIncremental>false</LinkIncremental>
+    <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <LinkIncremental>false</LinkIncremental>
+    <LinkIncremental>true</LinkIncremental>
+    <LibraryPath>
+    </LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -88,6 +90,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard_C>stdc17</LanguageStandard_C>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -102,6 +106,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard_C>stdc17</LanguageStandard_C>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -116,19 +122,20 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Program Files (x86)\FMOD SoundSystem\FMOD Studio API Windows\api\core\inc;C:\Users\B00l\source\repos\Patata\dependencies\glm-0.9.9.8;C:\Users\B00l\source\repos\Patata\dependencies\glad-master\include;C:\Users\B00l\source\repos\Patata\dependencies\glfw-master\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>C:\Program Files (x86)\FMOD SoundSystem\FMOD Studio API Windows\api\core\inc;$(SolutionDir)dependencies\glm-0.9.9.8;$(SolutionDir)dependencies\glad-master\include;D:\Documents\Personal Projects\C++_Projects\Patata\dependencies\lua-5.3.5\src;$(SolutionDir)dependencies\glfw-master\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
       <SuppressStartupBanner>false</SuppressStartupBanner>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Program Files %28x86%29\FMOD SoundSystem\FMOD Studio API Windows\api\core\lib\x64;C:\Users\B00l\source\repos\Patata\dependencies\glad-master\Debug;C:\Users\B00l\source\repos\Patata\dependencies\glfw-master\Debug\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glad.lib;glfw3.lib;fmod_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>D:\Documents\Personal Projects\C++_Projects\Patata\dependencies\lua-5.3.5;C:\Program Files %28x86%29\FMOD SoundSystem\FMOD Studio API Windows\api\core\lib\x64;$(SolutionDir)dependencies\glad-master\Debug;$(SolutionDir)dependencies\glfw-master\Debug\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>lua.lib;glad.lib;glfw3.lib;fmod_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy $(ProjectDir)code\shaders\*  $(ProjectDir)$(Platform)\$(Configuration)\shaders /y</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -139,8 +146,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Program Files (x86)\FMOD SoundSystem\FMOD Studio API Windows\api\core\inc;C:\Users\B00l\source\repos\Patata\dependencies\glm-0.9.9.8;C:\Users\B00l\source\repos\Patata\dependencies\glad-master\include;C:\Users\B00l\source\repos\Patata\dependencies\glfw-master\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>C:\Program Files (x86)\FMOD SoundSystem\FMOD Studio API Windows\api\core\inc;$(SolutionDir)dependencies\glm-0.9.9.8;$(SolutionDir)dependencies\glad-master\include;D:\Documents\Personal Projects\C++_Projects\Patata\dependencies\lua-5.3.5\src;$(SolutionDir)dependencies\glfw-master\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
       <SuppressStartupBanner>false</SuppressStartupBanner>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
     </ClCompile>
@@ -149,8 +156,8 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Program Files %28x86%29\FMOD SoundSystem\FMOD Studio API Windows\api\core\lib\x64;C:\Users\B00l\source\repos\Patata\dependencies\glad-master\Debug;C:\Users\B00l\source\repos\Patata\dependencies\glfw-master\Debug\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glad.lib;glfw3.lib;fmod_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>D:\Documents\Personal Projects\C++_Projects\Patata\dependencies\lua-5.3.5;C:\Program Files %28x86%29\FMOD SoundSystem\FMOD Studio API Windows\api\core\lib\x64;$(SolutionDir)dependencies\glad-master\Debug;$(SolutionDir)dependencies\glfw-master\Debug\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>lua_release.lib;glad.lib;glfw3.lib;fmod_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>xcopy $(ProjectDir)code\shaders\*  $(ProjectDir)$(Platform)\$(Configuration)\shaders /y</Command>
@@ -180,6 +187,7 @@
     <ClCompile Include="code\Render\Shader.cpp" />
     <ClCompile Include="code\ECS\Entities\Corridor.cpp" />
     <ClCompile Include="code\Physics\Collider.cpp" />
+    <ClCompile Include="code\ScriptManager\CScriptManager.cpp" />
     <ClCompile Include="dependencies\stb_image\stb_image.cpp" />
     <ClCompile Include="code\ECS\Entities\Room.cpp" />
     <ClCompile Include="code\ECS\Components\SoundComponent.cpp" />
@@ -191,6 +199,10 @@
     <ClCompile Include="code\ECS\Entities\NPC.cpp" />
     <ClCompile Include="code\Render\Renderer.cpp" />
     <ClCompile Include="code\ECS\Entities\Spawner.cpp" />
+    <ClCompile Include="code\Persistence\PersistenceUtils.cpp" />
+    <ClCompile Include="code\Observers\Observer.cpp" />
+    <ClCompile Include="code\Observers\Event.cpp" />
+    <ClCompile Include="code\Observers\Issue.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="code\Action\Action.h" />
@@ -217,6 +229,7 @@
     <ClInclude Include="code\Render\Shader.h" />
     <ClInclude Include="code\ECS\Entities\Corridor.h" />
     <ClInclude Include="code\Physics\Collider.h" />
+    <ClInclude Include="code\ScriptManager\CScriptManager.h" />
     <ClInclude Include="dependencies\stb_image\stb_image.h" />
     <ClInclude Include="code\ECS\Entities\Room.h" />
     <ClInclude Include="code\ECS\Components\SoundComponent.h" />
@@ -228,6 +241,10 @@
     <ClInclude Include="code\ECS\Entities\NPC.h" />
     <ClInclude Include="code\Render\Renderer.h" />
     <ClInclude Include="code\ECS\Entities\Spawner.h" />
+    <ClInclude Include="code\Persistence\PersistenceUtils.h" />
+    <ClInclude Include="code\Observers\Observer.h" />
+    <ClInclude Include="code\Observers\Event.h" />
+    <ClInclude Include="code\Observers\Issue.h" />
   </ItemGroup>
   <ItemGroup>
     <Font Include="resources\AncientModernTales-a7Po.ttf" />

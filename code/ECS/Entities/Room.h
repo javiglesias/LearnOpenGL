@@ -3,7 +3,7 @@
 class Room : public Entity
 {
 public:
-	Room() {}
+	Room() { Entity::m_name = "dummyRoom"; }
 	Room( glm::vec2 _position, float _width = 0.2f, float _height = 0.2f);
 	PhysicsComponent* GetPhysicsComponent() override;
 	void SetShaderColor(Color _color);
@@ -39,7 +39,6 @@ private:
 		"code\\shaders\\instance.frag", "Room");
 	Color m_shader_base_color = Color(153.f / 255.f, 76.f / 255.f, 0.f);
 	Shape_Size m_shape_size;
-	glm::vec2 m_position{0.f};
 	glm::vec2 m_movement{0.f};
 	PhysicsComponent* m_rigidbody;
 };	

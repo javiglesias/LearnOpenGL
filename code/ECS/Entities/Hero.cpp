@@ -1,8 +1,16 @@
 #include "Hero.h"
 
+Hero::~Hero()
+{
+	delete shader;
+	delete m_shape_size;
+	delete m_rigidbody;
+	delete m_ears;
+}
+
 Hero::Hero(glm::vec2 _init_position, float _width, float _height)
 {
-	m_shape_size = Shape_Size(_width, _height);
+	m_shape_size = new Shape_Size(_width, _height);
 	//	Width
 	shape[3] = -_width;
 	shape[6] = _width;
@@ -10,7 +18,7 @@ Hero::Hero(glm::vec2 _init_position, float _width, float _height)
 	shape[4] = -_height;
 	shape[7] = -_height;
 
-	m_position = _init_position;
+	Entity::m_position = _init_position;
 	m_ears = new SoundComponent();
 	m_ears->PlaySFX(m_ears->WALK);
 	glGenBuffers(1, &VBO);
@@ -23,9 +31,9 @@ Hero::Hero(glm::vec2 _init_position, float _width, float _height)
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float),
 		(void*)0);
 	glEnableVertexAttribArray(0);
-	m_model = glm::translate(m_model, glm::vec3(m_position.x, m_position.y, 0.0f));
-	m_position.y = m_position.y + _height;
-	m_position.x = m_position.x + _width;
+	m_model = glm::translate(m_model, glm::vec3(Entity::m_position.x, Entity::m_position.y, 0.0f));
+	Entity::m_position.y = Entity::m_position.y + _height;
+	Entity::m_position.x = Entity::m_position.x + _width;
 }
 
 void Hero::Draw()
@@ -40,10 +48,10 @@ void Hero::Draw()
 
 void Hero::Move(glm::vec2 _movement)
 {
-	if (m_position.x + _movement.x < -1 ||
-		m_position.x + _movement.x > 1	||
-		m_position.y + _movement.y < -1 ||
-		m_position.y + _movement.y > 1)
+	if (Entity::m_position.x + _movement.x < -1 ||
+		Entity::m_position.x + _movement.x > 1	||
+		Entity::m_position.y + _movement.y < -1 ||
+		Entity::m_position.y + _movement.y > 1)
 	{
 		return;
 	}
@@ -56,7 +64,7 @@ void Hero::Move(glm::vec2 _movement)
 	//{
 	//	m_model = glm::rotate(m_model, glm::radians(-90.f), glm::vec3(-1, -1, 0));
 	//}
-	m_position += m_translate;
+	Entity::m_position += m_translate;
 	m_model = glm::translate(m_model, glm::vec3(m_translate.x, m_translate.y, 0.0f));
 	m_translate = glm::vec2(0.0f);
 }
@@ -73,7 +81,7 @@ void Hero::UpdateSounds()
 
 glm::vec2 Hero::GetPosition()
 {
-	return m_position;
+	return Entity::m_position;
 }
 
 glm::vec2 Hero::GetNextPosition()

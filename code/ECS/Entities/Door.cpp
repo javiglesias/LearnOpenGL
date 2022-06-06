@@ -15,14 +15,14 @@ Door::Door(Shader* _shader, glm::vec2 _init_position, float _width, float _heigt
 	m_base_color_id = glGetUniformLocation(m_shader->id, "base_color");
 	//	Posicion de inicio donde va a empezar el enemigo
 	//m_model = glm::translate(m_model, glm::vec3(_init_position.x, _init_position.y, 0.0f));
-	m_position = _init_position;
-	m_model = glm::translate(m_model, glm::vec3(m_position.x, m_position.y, 0.0f));
-	m_rigidbody = new PhysicsComponent(m_position, _width, _heigth);
+	Entity::m_position = _init_position;
+	m_model = glm::translate(m_model, glm::vec3(Entity::m_position.x, Entity::m_position.y, 0.0f));
+	m_rigidbody = new PhysicsComponent(Entity::m_position, _width, _heigth);
 }
 
 void Door::Draw()
 {
-	m_rigidbody->UpdatePosition(m_position);
+	m_rigidbody->UpdatePosition(Entity::m_position);
 	glBindVertexArray(VAO);
 	glUniform4f(m_base_color_id, 0.4f, 0.5f, 1.f, 1.f);
 	glUniformMatrix4fv(m_model_id, 1, GL_FALSE, glm::value_ptr(m_model));
@@ -34,7 +34,7 @@ void Door::Draw()
 void Door::Move(glm::vec2 _scroling)
 {
 	m_translate -=_scroling;
-	m_position += m_translate;
+	Entity::m_position += m_translate;
 	m_model = glm::translate(m_model, glm::vec3(m_translate.x, m_translate.y, 0));
 	m_translate = glm::vec2(0.f);
 }
@@ -42,5 +42,5 @@ void Door::Move(glm::vec2 _scroling)
 
 glm::vec2 Door::GetPosition()
 {
-	return m_position;
+	return Entity::m_position;
 }

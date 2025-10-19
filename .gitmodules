@@ -19,3 +19,6 @@
 [submodule "dependencies/stb"]
 	path = dependencies/stb
 	url = git@github.com:nothings/stb.git
+[submodule "dependencies/freetype"]
+	path = dependencies/freetype
+	url = git@github.com:freetype/freetype.git

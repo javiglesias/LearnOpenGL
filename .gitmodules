@@ -1,0 +1,21 @@
+[submodule "dependencies/assimp"]
+	path = dependencies/assimp
+	url = git@github.com:assimp/assimp.git
+[submodule "dependencies/glad"]
+	path = dependencies/glad
+	url = git@github.com:Dav1dde/glad.git
+[submodule "dependencies/glfw"]
+	path = dependencies/glfw
+	url = git@github.com:glfw/glfw.git
+[submodule "dependencies/glm"]
+	path = dependencies/glm
+	url = git@github.com:g-truc/glm.git
+[submodule "dependencies/imgui"]
+	path = dependencies/imgui
+	url = git@github.com:ocornut/imgui.git
+[submodule "dependencies/lua"]
+	path = dependencies/lua
+	url = git@github.com:lua/lua.git
+[submodule "dependencies/stb"]
+	path = dependencies/stb
+	url = git@github.com:nothings/stb.git

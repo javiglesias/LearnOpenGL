@@ -37,7 +37,7 @@ bld/
 *.sln
 *.vcxproj.filters
 *.vcxproj.user
-.vcxproj
+*.vcxproj
 .vscode
 # Uncomment if you have tasks that create the project's static files in wwwroot
 #wwwroot/
